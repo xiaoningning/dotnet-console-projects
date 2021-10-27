@@ -10,7 +10,7 @@ class JsonApp1
     static void Main(string[] args)
     {
         string jstr2 = "";
-        using (StreamReader sr = File.OpenText("stripe-request-2.json"))
+        using (StreamReader sr = File.OpenText("sr-2.json"))
         {
             jstr2 = sr.ReadToEnd();
         }
@@ -48,6 +48,7 @@ class JsonApp1
         if (fList != null) foreach (var x in fList) Console.WriteLine($"{x}");
 
         Console.WriteLine("jsondocument parse str to object withou deserializer");
+
         // jsondocument/jsonelement in dotnet 5+ or dotnet core 3+
         string json_text = "{\"foo\": {\"bar\": [{\"p1\": \"a\"}, {\"p1\": \"b\"}, {\"p1\": \"c\"}]}}";
         var jdoc = JsonDocument.Parse(json_text);

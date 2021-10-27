@@ -106,9 +106,9 @@ class WebApiApp2
 
         // create a charge
         var values = new List<KeyValuePair<string, string>>();
-        values.Add(new KeyValuePair<string, string>("amount", "200"));
-        values.Add(new KeyValuePair<string, string>("currency", "usd"));
-        values.Add(new KeyValuePair<string, string>("source", "card1"));
+        values.Add(new KeyValuePair<string, string>("amt", "200"));
+        values.Add(new KeyValuePair<string, string>("cncy", "usd"));
+        values.Add(new KeyValuePair<string, string>("source", "helloworld"));
         var content = new FormUrlEncodedContent(values);
         var responseTask = client.PostAsync("https://api.test.appcloud.com/v1/xyz", content);
         var res = await responseTask;
