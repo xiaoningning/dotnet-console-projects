@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 /**
 newtonesoft.json does not support async out of box
-system.text.json supports async. jsondocument/jsonnode is similar to jobject
+system.text.json supports async. jsonnode(c# 6+)/jsondocument/jsonnode is similar to jobject
 */
 class NewtonJsonApp
 {

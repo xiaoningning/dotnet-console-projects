@@ -9,13 +9,6 @@ class JsonApp1
     static readonly string fileName = "jsonApp1.json";
     static void Main(string[] args)
     {
-        string jstr2 = "";
-        using (StreamReader sr = File.OpenText("sr-2.json"))
-        {
-            jstr2 = sr.ReadToEnd();
-        }
-        var j2 = JsonSerializer.Deserialize<List<SJson>>(jstr2);
-
         var p1 = new Person("a");
         p1.Ids.Add(1);
         p1.Groups?.Add(1, "g1");
@@ -41,7 +34,7 @@ class JsonApp1
         string fileStr;
         using (StreamReader sr = File.OpenText(fileName))
         {
-            fileStr = sr.ReadLine();
+            fileStr = sr.ReadToEnd();
         }
         Console.WriteLine($"json from file");
         List<Person> fList = JsonSerializer.Deserialize<List<Person>>(fileStr);
