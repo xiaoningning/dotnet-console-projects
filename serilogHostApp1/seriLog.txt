@@ -1,0 +1,54 @@
+2021-10-26 17:34:15.616 -07:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-10-26 17:34:15.681 -07:00 [INF] Hosting environment: Production
+2021-10-26 17:34:15.682 -07:00 [INF] Content root path: /Users/ningwei/github/serilogHostApp1
+2021-10-26 17:34:44.469 -07:00 [INF] Application is shutting down...
+2021-10-26 17:41:29.390 -07:00 [INF] DoWork: 10/26/2021 5:41:29 PM
+2021-10-26 17:50:07.287 -07:00 [INF] DoWork: 10/26/2021 5:50:07 PM
+2021-10-26 17:50:07.314 -07:00 [INF] DoWork Param: 
+2021-10-26 17:53:43.201 -07:00 [INF] DoWork Time: 10/26/2021 5:53:43 PM
+2021-10-26 17:53:43.229 -07:00 [INF] DoWork Param: 
+2021-10-26 17:54:51.440 -07:00 [INF] DoWork Time: 10/26/2021 5:54:51 PM
+2021-10-26 17:54:51.467 -07:00 [INF] DoWork Param: 
+2021-10-26 17:57:02.817 -07:00 [INF] DoWork Time: 10/26/2021 5:57:02 PM
+2021-10-26 17:57:02.833 -07:00 [INF] DoWork Param: 
+2021-10-26 17:59:44.962 -07:00 [INF] DoWork Time: 10/26/2021 5:59:44 PM
+2021-10-26 17:59:44.977 -07:00 [INF] DoWork Param: 
+2021-10-26 18:01:53.950 -07:00 [INF] DoWork Time: 10/26/2021 6:01:53 PM
+2021-10-26 18:01:53.978 -07:00 [INF] DoWork Param: 
+2021-10-26 18:02:40.559 -07:00 [INF] DoWork Time: 10/26/2021 6:02:40 PM
+2021-10-26 18:02:40.586 -07:00 [INF] DoWork Param: 
+2021-10-26 18:05:56.180 -07:00 [INF] DoWork Time: 10/26/2021 6:05:56 PM
+2021-10-26 18:05:56.208 -07:00 [INF] DoWork Param: 
+2021-10-26 18:10:48.992 -07:00 [INF] DoWork Time: 10/26/2021 6:10:48 PM
+2021-10-26 18:10:49.021 -07:00 [INF] DoWork Param: 
+2021-10-26 18:10:49.021 -07:00 [INF] DoWork Param1: 
+2021-10-26 18:11:23.774 -07:00 [INF] DoWork Time: 10/26/2021 6:11:23 PM
+2021-10-26 18:11:23.803 -07:00 [INF] DoWork Param: 
+2021-10-26 18:11:23.803 -07:00 [INF] DoWork Param1: 
+2021-10-26 18:11:50.865 -07:00 [INF] DoWork Time: 10/26/2021 6:11:50 PM
+2021-10-26 18:11:50.892 -07:00 [INF] DoWork Param: 
+2021-10-26 18:11:50.892 -07:00 [INF] DoWork Param1: 
+2021-10-26 18:13:39.209 -07:00 [INF] DoWork Time: 10/26/2021 6:13:39 PM
+2021-10-26 18:13:39.237 -07:00 [INF] DoWork Param: ParamValue
+2021-10-26 18:13:39.237 -07:00 [INF] DoWork Param1: ParamValue1
+2021-10-26 18:14:24.010 -07:00 [INF] DoWork Time: 10/26/2021 6:14:23 PM
+2021-10-26 18:14:24.037 -07:00 [INF] DoWork Param: ParamValue
+2021-10-26 18:14:24.038 -07:00 [INF] DoWork Param1: ParamValue1
+2021-10-26 18:30:18.033 -07:00 [INF] DoWork Time: 10/26/2021 6:30:17 PM
+2021-10-26 18:30:18.060 -07:00 [INF] DoWork Param: ParamValue
+2021-10-26 18:30:18.060 -07:00 [INF] DoWork Param1: ParamValue1
+2021-10-26 18:30:18.173 -07:00 [INF] FrontService DoWork Time: 10/26/2021 6:30:18 PM
+2021-10-26 18:30:18.174 -07:00 [INF] FrontService DoWork Param: ParamValue
+2021-10-26 18:30:18.174 -07:00 [INF] FrontService DoWork Param1: ParamValue1
+2021-10-26 18:36:50.243 -07:00 [INF] DoWork Time: 10/26/2021 6:36:50 PM
+2021-10-26 18:36:50.270 -07:00 [INF] DoWork Param: ParamValue
+2021-10-26 18:36:50.270 -07:00 [INF] DoWork Param1: ParamValue1
+2021-10-26 18:36:50.272 -07:00 [INF] FrontService DoWork Time: 10/26/2021 6:36:50 PM
+2021-10-26 18:36:50.272 -07:00 [INF] FrontService DoWork Param: ParamValue
+2021-10-26 18:36:50.272 -07:00 [INF] FrontService DoWork Param1: ParamValue1
+2021-10-26 23:09:53.644 -07:00 [INF] DoWork Time: 10/26/2021 11:09:53 PM
+2021-10-26 23:09:53.671 -07:00 [INF] DoWork Param: ParamValue
+2021-10-26 23:09:53.671 -07:00 [INF] DoWork Param1: ParamValue1
+2021-10-26 23:09:53.673 -07:00 [INF] FrontService DoWork Time: 10/26/2021 11:09:53 PM
+2021-10-26 23:09:53.674 -07:00 [INF] FrontService DoWork Param: ParamValue
+2021-10-26 23:09:53.674 -07:00 [INF] FrontService DoWork Param1: ParamValue1

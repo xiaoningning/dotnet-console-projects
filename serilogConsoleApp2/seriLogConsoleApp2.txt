@@ -1,0 +1,68 @@
+2021-10-26 22:15:33.666 -07:00 [INF] WorkerService 1565941939
+2021-10-26 22:15:33.751 -07:00 [INF] main logger
+2021-10-26 22:20:21.234 -07:00 [DBG] Logger OK (logger)
+2021-10-26 22:20:21.319 -07:00 [INF] WorkerService 87996239
+2021-10-26 22:20:21.319 -07:00 [INF] main logger
+2021-10-26 22:23:42.209 -07:00 [DBG] Logger OK (logger)
+2021-10-26 22:23:42.295 -07:00 [FTL] Unexpected critical error starting application
+2021-10-26 22:23:42.296 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService..ctor(ILogger`1 logger) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 79
+2021-10-26 22:23:42.340 -07:00 [ERR] Unexpected error
+2021-10-26 22:23:42.340 -07:00 [WRN] Unexpected warning
+2021-10-26 22:23:42.341 -07:00 [INF] log scope
+2021-10-26 22:23:42.343 -07:00 [INF] WorkerService 1684982161
+2021-10-26 22:23:42.343 -07:00 [INF] main logger
+2021-10-26 23:03:58.489 -07:00 [DBG] Logger OK (logger)
+2021-10-26 23:03:58.575 -07:00 [INF] WorkerService 115845025
+2021-10-26 23:03:58.576 -07:00 [FTL] Unexpected critical error starting application
+2021-10-26 23:03:58.577 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 87
+2021-10-26 23:03:58.621 -07:00 [ERR] Unexpected error
+2021-10-26 23:03:58.621 -07:00 [WRN] Unexpected warning
+2021-10-26 23:03:58.622 -07:00 [INF] log scope
+2021-10-26 23:03:58.623 -07:00 [INF] main logger
+2021-10-26 23:05:07.777 -07:00 [DBG] Logger OK (logger)
+2021-10-26 23:05:07.866 -07:00 [INF] WorkerService 972474836
+2021-10-26 23:05:07.867 -07:00 [FTL] Unexpected critical error starting application
+2021-10-26 23:05:07.869 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 86
+2021-10-26 23:05:07.912 -07:00 [ERR] Unexpected error
+2021-10-26 23:05:07.912 -07:00 [WRN] Unexpected warning
+2021-10-26 23:05:07.913 -07:00 [INF] log scope
+2021-10-26 23:05:07.914 -07:00 [INF] main logger
+2021-10-26 23:19:28.140 -07:00 [DBG] Logger OK (logger)
+2021-10-26 23:19:28.229 -07:00 [INF] WorkerService 612538216
+2021-10-26 23:19:28.230 -07:00 [FTL] Unexpected critical error starting application
+2021-10-26 23:19:28.232 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 88
+2021-10-26 23:19:28.277 -07:00 [ERR] Unexpected error
+2021-10-26 23:19:28.277 -07:00 [WRN] Unexpected warning
+2021-10-26 23:19:28.278 -07:00 [INF] log scope
+2021-10-26 23:19:28.279 -07:00 [INF] main logger
+2021-10-27 15:22:37.950 -07:00 [DBG] Logger OK (logger)
+2021-10-27 15:22:38.033 -07:00 [DBG] Iconfiguration: ParamValue
+2021-10-27 15:22:38.034 -07:00 [INF] WorkerService 941204601
+2021-10-27 15:22:38.035 -07:00 [FTL] Unexpected critical error starting application
+2021-10-27 15:22:38.037 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 100
+2021-10-27 15:22:38.080 -07:00 [ERR] Unexpected error
+2021-10-27 15:22:38.080 -07:00 [WRN] Unexpected warning
+2021-10-27 15:22:38.081 -07:00 [INF] log scope
+2021-10-27 15:22:38.082 -07:00 [INF] main logger
+2021-10-27 15:26:01.023 -07:00 [DBG] Logger OK (logger)
+2021-10-27 15:26:01.105 -07:00 [DBG] Iconfiguration: ParamValue
+2021-10-27 15:26:01.106 -07:00 [INF] WorkerService 292183084
+2021-10-27 15:26:01.107 -07:00 [FTL] Unexpected critical error starting application
+2021-10-27 15:26:01.109 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/github/serilogConsoleApp2/Program.cs:line 103
+2021-10-27 15:26:01.151 -07:00 [ERR] Unexpected error
+2021-10-27 15:26:01.151 -07:00 [WRN] Unexpected warning
+2021-10-27 15:26:01.153 -07:00 [INF] log scope
+2021-10-27 15:26:01.154 -07:00 [INF] main logger
+2021-10-27 15:26:01.154 -07:00 [INF] Iconfiguration read: ParamValue
