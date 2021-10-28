@@ -1,0 +1,2 @@
+2021-10-27 21:39:36.576 -07:00 [INF] Front service serilog
+2021-10-27 21:39:36.577 -07:00 [INF] FrontService serilog
