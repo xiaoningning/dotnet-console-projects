@@ -12,13 +12,13 @@ using Microsoft.Extensions.Configuration.EnvironmentVariables;
 class SerilogConsoleApp2
 {
     static ILogger<SerilogConsoleApp2>? _logger;
-    static int Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
         var builder = AppSetup(args);
 
         var ws = builder.GetService<WorkerService>();
         var rand = new Random();
-        ws?.DoWork(rand.Next().ToString());
+        await ws?.DoWork(rand.Next().ToString());
 
         _logger = builder.GetRequiredService<ILogger<SerilogConsoleApp2>>();
         _logger.LogInformation($"main logger");
@@ -95,9 +95,10 @@ public class WorkerService
         _logger.LogDebug($"Iconfiguration: {configv}");
     }
 
-    public void DoWork(string x)
+    public async Task DoWork(string x)
     {
         _logger.LogInformation($"{this.GetType()} {x}");
+        await Task.Delay(1000);
 
         try
         {
