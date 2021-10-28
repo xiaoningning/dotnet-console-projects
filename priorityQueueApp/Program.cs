@@ -33,6 +33,46 @@ class Program
         q.Enqueue("abc");
         Console.WriteLine("loop through q");
         while (q.Any()) Console.WriteLine(q.Dequeue());
+
+        var jobQueue = new PriorityQueue<Job, Job>(Comparer<Job>.Create((x, y) =>
+        {
+            var xLife = (x.Life + x.CreateTime) * x.SlowRate;
+            var yLife = (y.Life + y.CreateTime) * y.SlowRate;
+            return xLife.CompareTo(yLife);
+        }));
+
+        var j1 = new Job()
+        {
+            Id = Guid.NewGuid(),
+            Name = "j1",
+            SlowRate = 1.0,
+            Life = 100,
+            CreateTime = (DateTime.Now - DateTimeOffset.UnixEpoch).TotalSeconds
+        };
+        var j2 = new Job()
+        {
+            Id = Guid.NewGuid(),
+            Name = "j2",
+            SlowRate = 2.0,
+            Life = 100,
+            CreateTime = (DateTime.Now - DateTimeOffset.UnixEpoch).TotalSeconds
+        };
+        var j3 = new Job()
+        {
+            Id = Guid.NewGuid(),
+            SlowRate = 3.0,
+            Name = "j3",
+            Life = 100,
+            CreateTime = (DateTime.Now - DateTimeOffset.UnixEpoch).TotalSeconds
+        };
+        jobQueue.Enqueue(j1, j1);
+        jobQueue.Enqueue(j2, j2);
+        jobQueue.Enqueue(j3, j3);
+        while (jobQueue.Count != 0)
+        {
+            var t = jobQueue.Dequeue();
+            Console.WriteLine($"{t.Id} - {t.Name} - {t.SlowRate} - {(t.Life + t.CreateTime) * t.SlowRate}");
+        }
     }
 }
 public static class PQtest
@@ -83,4 +123,13 @@ public class PQ
     {
         return _pq.Count != 0;
     }
+}
+
+public class Job
+{
+    public Guid Id { get; set; }
+    public double SlowRate { get; set; }
+    public int Life { get; set; }
+    public double CreateTime { get; set; }
+    public string Name { get; set; }
 }
