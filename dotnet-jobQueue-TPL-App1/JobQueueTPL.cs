@@ -39,6 +39,8 @@ public class JobQueueTPL : IJobQueue
 
         _wastedItem = new ConcurrentBag<JobItem>();
         _finishedItem = new ConcurrentBag<JobItem>();
+        Func<JobItem, Task<JobItem>> _pAsync = async (i) => await ProcessItemAsync(i);
+        Func<JobItem, Task> _fAsync = async (i) => await FinishItemAsync(i);
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} create queue");
         _itemQueue = new BroadcastBlock<JobItem>(item => item, new DataflowBlockOptions()
@@ -47,7 +49,7 @@ public class JobQueueTPL : IJobQueue
         });
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} create fedex queue");
-        _fedexQueue = new TransformBlock<JobItem, JobItem>(async (i) => await ProcessItemAsync(i),
+        _fedexQueue = new TransformBlock<JobItem, JobItem>(_pAsync,
         new ExecutionDataflowBlockOptions()
         {
             MaxDegreeOfParallelism = 1,
@@ -55,7 +57,7 @@ public class JobQueueTPL : IJobQueue
         });
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} create  ups queue");
-        _upsQueue = new TransformBlock<JobItem, JobItem>(async (i) => await ProcessItemAsync(i),
+        _upsQueue = new TransformBlock<JobItem, JobItem>(_pAsync,
         new ExecutionDataflowBlockOptions()
         {
             MaxDegreeOfParallelism = 1,
@@ -63,7 +65,7 @@ public class JobQueueTPL : IJobQueue
         });
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} create unknown queue");
-        _unknownQueue = new TransformBlock<JobItem, JobItem>(async (i) => await ProcessItemAsync(i),
+        _unknownQueue = new TransformBlock<JobItem, JobItem>(_pAsync,
         new ExecutionDataflowBlockOptions()
         {
             MaxDegreeOfParallelism = 1,
@@ -72,7 +74,7 @@ public class JobQueueTPL : IJobQueue
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} set up finish job");
 
-        _finishQueue = new ActionBlock<JobItem>(async (i) => await FinishItemAsync(i), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 });
+        _finishQueue = new ActionBlock<JobItem>(_fAsync, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 });
     }
     public async Task SendJob(IJobItem j, CancellationToken ct)
     {

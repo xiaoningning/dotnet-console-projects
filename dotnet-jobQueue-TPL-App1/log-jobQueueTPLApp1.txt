@@ -54,3 +54,12 @@ System.Exception: Boom!
 2021-10-28 18:56:05.540 -07:00 [DBG] JobQueueTPL create unknown queue
 2021-10-28 18:56:05.541 -07:00 [DBG] JobQueueTPL set up finish job
 2021-10-28 18:56:05.542 -07:00 [INF] wasted items: 0
+2021-10-28 19:01:01.134 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-28 19:01:01.215 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-28 19:01:01.216 -07:00 [DBG] Iconfiguration: False
+2021-10-28 19:01:01.217 -07:00 [DBG] JobQueueTPL create queue
+2021-10-28 19:01:01.220 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-28 19:01:01.222 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-28 19:01:01.222 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-28 19:01:01.222 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-28 19:01:01.224 -07:00 [INF] wasted items: 0
