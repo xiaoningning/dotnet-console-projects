@@ -80,13 +80,10 @@ public class JobQueueTPL : IJobQueue
         });
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} set up finish job");
-
         _finishQueue = new TransformBlock<JobItem, JobItem>(_fAsync, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 });
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} link all blocks");
-
         var linkOp = new DataflowLinkOptions() { PropagateCompletion = true };
-
         _fedexQueue.LinkTo(_finishQueue, linkOp);
         _upsQueue.LinkTo(_finishQueue, linkOp);
         _unknownQueue.LinkTo(_finishQueue, linkOp);
