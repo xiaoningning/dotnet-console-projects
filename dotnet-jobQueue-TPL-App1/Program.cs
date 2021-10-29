@@ -31,7 +31,7 @@ class JobQueueTPLApp1
             await jq.SendJob(ti, CancellationToken.None);
         });
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(10 * 1000);
+        cts.CancelAfter(1 * 1000);
         await jq.FinishJob(cts.Token);
 
         Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>

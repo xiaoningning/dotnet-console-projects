@@ -11,7 +11,7 @@ public class JobQueueTPL : IJobQueue
     readonly ILogger<JobQueueTPL> _logger;
     readonly IConfiguration _config;
     readonly bool _usePriorityQueue = false;
-    readonly int _defaultCapacity = 1;
+    readonly int _defaultCapacity = 10;
     readonly int _defaultRetryCnt = 3;
     BroadcastBlock<JobItem> _itemQueue;
     TransformBlock<JobItem, JobItem> _fedexQueue;

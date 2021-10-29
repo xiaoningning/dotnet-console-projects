@@ -1423,3 +1423,103 @@ System.Exception: Boom!
 2021-10-29 00:44:11.334 -07:00 [DBG] JobQueueTPL create unknown queue
 2021-10-29 00:44:11.334 -07:00 [DBG] JobQueueTPL set up finish job
 2021-10-29 00:44:11.334 -07:00 [DBG] JobQueueTPL link all blocks
+2021-10-29 00:48:29.619 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-29 00:48:29.700 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-29 00:48:29.701 -07:00 [DBG] Iconfiguration: False
+2021-10-29 00:48:29.702 -07:00 [DBG] JobQueueTPL create queue
+2021-10-29 00:48:29.706 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-29 00:48:29.709 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-29 00:48:29.709 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-29 00:48:29.709 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-29 00:48:29.710 -07:00 [DBG] JobQueueTPL link all blocks
+2021-10-29 00:48:29.746 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:29 AM : 0e4a - Fedex - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:29.746 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:29 AM : 6b53 - UPS - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:29.752 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:29 AM : 2dcc - UPS - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:29.753 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:29 AM : 0e4a - Fedex - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:29.753 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:29 AM : 6b53 - UPS - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:29.755 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:29 AM : 2dcc - UPS - 10/29/2021 12:48:29 AM
+2021-10-29 00:48:39.741 -07:00 [INF] No more jobs within set time
+2021-10-29 00:48:39.743 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:39 AM : 90ea - UPS - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.743 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:39 AM : 424b - Fedex - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.745 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:39 AM : 90ea - UPS - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.745 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:48:39 AM : 029a - Fedex - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.745 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:39 AM : 424b - Fedex - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.746 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:48:39 AM : 029a - Fedex - 10/29/2021 12:48:39 AM
+2021-10-29 00:48:39.789 -07:00 [INF] wait for more jobs System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at JobQueueTPL.FinishJob(CancellationToken ct) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/JobQueueTPL.cs:line 131
+2021-10-29 00:48:39.789 -07:00 [INF] No more jobs within set time
+2021-10-29 00:48:39.790 -07:00 [INF] wasted items: 0
+2021-10-29 00:48:39.790 -07:00 [INF] finished items: 6
+2021-10-29 00:48:39.791 -07:00 [INF] done: 00:00:10.0775019
+2021-10-29 00:49:37.619 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-29 00:49:37.700 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-29 00:49:37.702 -07:00 [DBG] Iconfiguration: False
+2021-10-29 00:49:37.702 -07:00 [DBG] JobQueueTPL create queue
+2021-10-29 00:49:37.706 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-29 00:49:37.708 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-29 00:49:37.709 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-29 00:49:37.709 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-29 00:49:37.709 -07:00 [DBG] JobQueueTPL link all blocks
+2021-10-29 00:49:37.747 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:37 AM : eaec - Fedex - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.747 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:37 AM : b986 - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.750 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:37 AM : e2bd - Fedex - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.750 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:37 AM : f0ff - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.752 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:37 AM : f7a1 - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.753 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:37 AM : eaec - Fedex - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.753 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:37 AM : b986 - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.755 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:37 AM : e2bd - Fedex - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.755 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:37 AM : f0ff - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:37.757 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:37 AM : f7a1 - UPS - 10/29/2021 12:49:37 AM
+2021-10-29 00:49:47.741 -07:00 [INF] No more jobs within set time
+2021-10-29 00:49:47.744 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:47 AM : e4f7 - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.744 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:47 AM : 6b11 - Fedex - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.745 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:47 AM : e4f7 - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.745 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:47 AM : 1879 - Fedex - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.745 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:47 AM : 32f1 - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.745 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:47 AM : 6b11 - Fedex - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.746 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:49:47 AM : a59c - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.746 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:47 AM : 1879 - Fedex - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.747 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:47 AM : a59c - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.747 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:49:47 AM : 32f1 - UPS - 10/29/2021 12:49:47 AM
+2021-10-29 00:49:47.790 -07:00 [INF] wait for more jobs System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at JobQueueTPL.FinishJob(CancellationToken ct) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/JobQueueTPL.cs:line 131
+2021-10-29 00:49:47.790 -07:00 [INF] No more jobs within set time
+2021-10-29 00:49:47.791 -07:00 [INF] wasted items: 0
+2021-10-29 00:49:47.791 -07:00 [INF] finished items: 10
+2021-10-29 00:49:47.792 -07:00 [INF] done: 00:00:10.0780682
+2021-10-29 00:50:03.721 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-29 00:50:03.806 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-29 00:50:03.808 -07:00 [DBG] Iconfiguration: False
+2021-10-29 00:50:03.809 -07:00 [DBG] JobQueueTPL create queue
+2021-10-29 00:50:03.813 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-29 00:50:03.815 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-29 00:50:03.815 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-29 00:50:03.815 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-29 00:50:03.816 -07:00 [DBG] JobQueueTPL link all blocks
+2021-10-29 00:50:03.853 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:03 AM : d982 - Fedex - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.853 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:03 AM : efdd - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.858 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:03 AM : f227 - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.858 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:03 AM : efbe - Fedex - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.859 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:03 AM : 3663 - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.862 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:03 AM : d982 - Fedex - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.862 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:03 AM : efdd - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.864 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:03 AM : efbe - Fedex - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.864 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:03 AM : f227 - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:03.866 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:03 AM : 3663 - UPS - 10/29/2021 12:50:03 AM
+2021-10-29 00:50:04.847 -07:00 [INF] No more jobs within set time
+2021-10-29 00:50:04.849 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:04 AM : 4eb8 - Fedex - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.849 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:04 AM : 7ca9 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.850 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:04 AM : e664 - Fedex - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.850 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:04 AM : 6f41 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.850 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:04 AM : 7ca9 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.851 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:04 AM : 4eb8 - Fedex - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.852 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:04 AM : e664 - Fedex - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.852 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 12:50:04 AM : 71a3 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.853 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:04 AM : 6f41 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.853 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 12:50:04 AM : 71a3 - UPS - 10/29/2021 12:50:04 AM
+2021-10-29 00:50:04.896 -07:00 [INF] wait for more jobs System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at JobQueueTPL.FinishJob(CancellationToken ct) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/JobQueueTPL.cs:line 131
+2021-10-29 00:50:04.896 -07:00 [INF] No more jobs within set time
+2021-10-29 00:50:04.897 -07:00 [INF] wasted items: 0
+2021-10-29 00:50:04.897 -07:00 [INF] finished items: 10
+2021-10-29 00:50:04.898 -07:00 [INF] done: 00:00:01.0774104
