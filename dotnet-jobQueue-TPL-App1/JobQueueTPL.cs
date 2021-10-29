@@ -125,7 +125,7 @@ public class JobQueueTPL : IJobQueue
             _logger.LogError($"sendAsync {ex}");
             _logger.LogError($"send to wasted bag {item.ToString()}");
             await Task.Run(() => _wastedItem.Add(item));
-            _logger.LogError($"send to poison queue {item.ToString()}");
+            _logger.LogError($"poison queue handle backpressure {item.ToString()}");
             await _poisonQueue.SendAsync(item);
         }
     }
