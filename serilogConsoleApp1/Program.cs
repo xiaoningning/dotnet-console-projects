@@ -15,7 +15,7 @@ public class SerilogConsoleApp
         var sw = System.Diagnostics.Stopwatch.StartNew();
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .WriteTo.File("serilog.txt")
+            .WriteTo.File("serilog.log")
             .CreateLogger();
 
         for (var i = 0; i < 1; ++i)
@@ -27,7 +27,7 @@ public class SerilogConsoleApp
         sw.Stop();
 
         Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Size: {new FileInfo("serilog.txt").Length}");
+        Console.WriteLine($"Size: {new FileInfo("serilog.log").Length}");
 
         // var logger = new SerilogLoggerProvider(Log.Logger, true).CreateLogger(typeof(WorkerService).FullName);
         var ws = new WorkerService(Log.Logger);

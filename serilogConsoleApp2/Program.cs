@@ -42,7 +42,7 @@ class SerilogConsoleApp2
         var serilogLogger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
             .WriteTo.Console()
-            .WriteTo.File("seriLogConsoleApp2.txt")
+            .WriteTo.File("seriLogConsoleApp2.log")
             .CreateLogger();
 
         // Setting up dependency injection

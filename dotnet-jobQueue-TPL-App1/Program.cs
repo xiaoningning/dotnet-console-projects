@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 class JobQueueTPLApp1
 {
-    static readonly string _logFileName = "log-jobQueueTPLApp1.txt";
+    static readonly string _logFileName = "log-jobQueueTPLApp1.log";
     static readonly string _appSettingFileName = "appsettings.json";
     static async Task<int> Main(string[] args)
     {

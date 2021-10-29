@@ -28,7 +28,7 @@ class SerilogHostApp
         // defining Serilog configs
         var serilogLogger = new LoggerConfiguration()
             .WriteTo.Console()
-            .WriteTo.File("seriLog.txt")
+            .WriteTo.File("seriLog.log")
             .CreateLogger();
 
         // Initiated the denpendency injection container 
