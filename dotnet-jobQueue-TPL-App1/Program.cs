@@ -49,6 +49,9 @@ class JobQueueTPLApp1
         _logger.LogInformation($"finished items: {fis.Count}");
         _logger.LogInformation($"done: {s.Elapsed}");
 
+        Func<JobItem, JobItem> f = (job) => { return job; };
+        jq.RegisterJobHandler(JobHandlerType.UnkownProcess, f);
+
         return Environment.ExitCode;
     }
     static ServiceProvider AppSetup(string[] args)

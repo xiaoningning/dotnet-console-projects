@@ -21,6 +21,7 @@ public class JobQueueTPL : IJobQueue
     TransformBlock<JobItem, JobItem> _finishQueue;
     ConcurrentBag<JobItem> _wastedItem;
     ConcurrentBag<JobItem> _finishedItem;
+    Dictionary<JobHandlerType, Func<JobItem, JobItem>> _jobHandler;
     public JobQueueTPL(ILogger<JobQueueTPL> logger, IConfiguration config)
     {
         if (logger == null)
@@ -46,6 +47,7 @@ public class JobQueueTPL : IJobQueue
 
         _wastedItem = new ConcurrentBag<JobItem>();
         _finishedItem = new ConcurrentBag<JobItem>();
+        _jobHandler = new Dictionary<JobHandlerType, Func<JobItem, JobItem>>();
         Func<JobItem, Task<JobItem>> _pAsync = async (i) => await ProcessItemAsync(i);
         Func<JobItem, Task<JobItem>> _fAsync = async (i) => await FinishItemAsync(i);
 
@@ -87,6 +89,35 @@ public class JobQueueTPL : IJobQueue
         _fedexQueue.LinkTo(_finishQueue, linkOp);
         _upsQueue.LinkTo(_finishQueue, linkOp);
         _unknownQueue.LinkTo(_finishQueue, linkOp);
+    }
+
+    public void RegisterJobHandler(JobHandlerType t, Func<JobItem, JobItem> f)
+    {
+        _jobHandler[t] = f;
+        _logger.LogInformation($"register a new job handler: {t}");
+
+        var edbOp = new ExecutionDataflowBlockOptions()
+        {
+            MaxDegreeOfParallelism = 1,
+            BoundedCapacity = _defaultCapacity
+        };
+
+        if (t == JobHandlerType.FedexProcess)
+        {
+            _fedexQueue = new TransformBlock<JobItem, JobItem>(f, edbOp);
+        }
+        if (t == JobHandlerType.UPSProcess)
+        {
+            _upsQueue = new TransformBlock<JobItem, JobItem>(f, edbOp);
+        }
+        if (t == JobHandlerType.UnkownProcess)
+        {
+            _unknownQueue = new TransformBlock<JobItem, JobItem>(f, edbOp);
+        }
+        if (t == JobHandlerType.FinishProcess)
+        {
+            _finishQueue = new TransformBlock<JobItem, JobItem>(f, edbOp);
+        }
     }
     public async Task SendJob(IJobItem job, CancellationToken ct)
     {
@@ -171,3 +202,5 @@ public class JobQueueTPL : IJobQueue
         return item;
     }
 }
+
+public enum JobHandlerType { FedexProcess, UPSProcess, UnkownProcess, FinishProcess }
