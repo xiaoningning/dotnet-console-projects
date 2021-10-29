@@ -6,6 +6,14 @@ using Polly;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 
+/**
+learning notes:
+Apache Beam is an open source, unified model for defining both batch and streaming data-parallel processing pipelines
+Apache beam support python/java/go
+Services: 
+- apache spark runner
+- google cloud dataflow runner
+*/
 public class JobQueueTPL : IJobQueue
 {
     readonly ILogger<JobQueueTPL> _logger;
