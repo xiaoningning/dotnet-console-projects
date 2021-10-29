@@ -4,8 +4,9 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks.Dataflow;
 using Polly;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
 
-public class JobQueueTPL
+public class JobQueueTPL : IJobQueue
 {
     readonly ILogger<JobQueueTPL> _logger;
     readonly IConfiguration _config;
@@ -73,8 +74,10 @@ public class JobQueueTPL
 
         _finishQueue = new ActionBlock<JobItem>(async (i) => await FinishItemAsync(i), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 });
     }
-    public async Task SendJob(JobItem item, CancellationToken ct)
+    public async Task SendJob(IJobItem j, CancellationToken ct)
     {
+        var item = (JobItem)j;
+
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} link all blocks");
 
         _itemQueue.LinkTo(_fedexQueue, item => item.ItemType == JobType.Fedex);

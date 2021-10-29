@@ -90,3 +90,39 @@ System.Exception: Boom!
 2021-10-27 17:13:04.514 -07:00 [INF] log scope
 2021-10-27 17:13:04.515 -07:00 [INF] main logger
 2021-10-27 17:13:04.516 -07:00 [INF] Iconfiguration read in main: ParamValue
+2021-10-28 18:37:29.567 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:37:29.649 -07:00 [DBG] Iconfiguration: ParamValue
+2021-10-28 18:37:29.651 -07:00 [INF] WorkerService 1782606094
+2021-10-28 18:37:30.683 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:37:30.686 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/serilogConsoleApp2/Program.cs:line 105
+2021-10-28 18:37:30.747 -07:00 [ERR] Unexpected error
+2021-10-28 18:37:30.747 -07:00 [WRN] Unexpected warning
+2021-10-28 18:37:30.748 -07:00 [INF] log scope
+2021-10-28 18:37:30.749 -07:00 [INF] main logger
+2021-10-28 18:37:30.750 -07:00 [INF] Iconfiguration read in main: ParamValue
+2021-10-28 18:39:40.208 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:39:40.289 -07:00 [DBG] Iconfiguration: ParamValue
+2021-10-28 18:39:40.290 -07:00 [INF] WorkerService 2129752415
+2021-10-28 18:39:41.324 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:39:41.328 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/serilogConsoleApp2/Program.cs:line 105
+2021-10-28 18:39:41.393 -07:00 [ERR] Unexpected error
+2021-10-28 18:39:41.393 -07:00 [WRN] Unexpected warning
+2021-10-28 18:39:41.395 -07:00 [INF] log scope
+2021-10-28 18:39:41.396 -07:00 [INF] main logger
+2021-10-28 18:39:41.396 -07:00 [INF] Iconfiguration read in main: ParamValue
+2021-10-28 18:46:01.077 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:46:01.148 -07:00 [DBG] Iconfiguration: ParamValue
+2021-10-28 18:46:39.563 -07:00 [INF] WorkerService 1209207646
+2021-10-28 18:46:40.627 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:46:40.630 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/serilogConsoleApp2/Program.cs:line 105
+2021-10-28 18:46:40.688 -07:00 [ERR] Unexpected error
+2021-10-28 18:46:40.688 -07:00 [WRN] Unexpected warning
+2021-10-28 18:46:40.690 -07:00 [INF] log scope
+2021-10-28 18:46:40.691 -07:00 [INF] main logger
+2021-10-28 18:46:40.691 -07:00 [INF] Iconfiguration read in main: ParamValue

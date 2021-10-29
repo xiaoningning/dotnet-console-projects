@@ -1,0 +1,56 @@
+2021-10-28 18:36:11.185 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:36:11.258 -07:00 [INF] WorkerService x
+2021-10-28 18:36:12.321 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:36:12.324 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/Program.cs:line 92
+2021-10-28 18:36:12.382 -07:00 [ERR] Unexpected error
+2021-10-28 18:36:12.382 -07:00 [WRN] Unexpected warning
+2021-10-28 18:36:12.383 -07:00 [INF] log scope
+2021-10-28 18:49:21.284 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:49:21.378 -07:00 [DBG] Iconfiguration: 
+2021-10-28 18:49:22.344 -07:00 [INF] WorkerService x
+2021-10-28 18:49:23.406 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:49:23.409 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/Program.cs:line 92
+2021-10-28 18:49:23.467 -07:00 [ERR] Unexpected error
+2021-10-28 18:49:23.467 -07:00 [WRN] Unexpected warning
+2021-10-28 18:49:23.468 -07:00 [INF] log scope
+2021-10-28 18:49:29.441 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-28 18:50:36.051 -07:00 [DBG] Logger OK (logger)
+2021-10-28 18:50:36.132 -07:00 [DBG] Iconfiguration: 
+2021-10-28 18:50:36.133 -07:00 [INF] WorkerService x
+2021-10-28 18:50:37.168 -07:00 [FTL] Unexpected critical error starting application
+2021-10-28 18:50:37.172 -07:00 [FTL] Unexpected critical error
+System.Exception: Boom!
+   at WorkerService.DoWork(String x) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/Program.cs:line 92
+2021-10-28 18:50:37.238 -07:00 [ERR] Unexpected error
+2021-10-28 18:50:37.238 -07:00 [WRN] Unexpected warning
+2021-10-28 18:50:37.240 -07:00 [INF] log scope
+2021-10-28 18:50:37.242 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-28 18:50:37.242 -07:00 [DBG] Iconfiguration: False
+2021-10-28 18:50:37.243 -07:00 [DBG] JobQueueTPL create queue
+2021-10-28 18:50:37.246 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-28 18:50:37.249 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-28 18:50:37.249 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-28 18:50:37.249 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-28 18:50:37.250 -07:00 [INF] wasted items: 0
+2021-10-28 18:53:22.509 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-28 18:53:22.588 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-28 18:53:22.589 -07:00 [DBG] Iconfiguration: False
+2021-10-28 18:53:22.590 -07:00 [DBG] JobQueueTPL create queue
+2021-10-28 18:53:22.593 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-28 18:53:22.596 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-28 18:53:22.596 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-28 18:53:22.596 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-28 18:53:22.598 -07:00 [INF] wasted items: 0
+2021-10-28 18:56:05.449 -07:00 [INF] Iconfiguration read in main: 10
+2021-10-28 18:56:05.533 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-28 18:56:05.534 -07:00 [DBG] Iconfiguration: False
+2021-10-28 18:56:05.535 -07:00 [DBG] JobQueueTPL create queue
+2021-10-28 18:56:05.538 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-28 18:56:05.540 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-28 18:56:05.540 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-28 18:56:05.541 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-28 18:56:05.542 -07:00 [INF] wasted items: 0
