@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 class Program
 {
@@ -73,6 +74,9 @@ class Program
             var t = jobQueue.Dequeue();
             Console.WriteLine($"{t.Id} - {t.Name} - {t.SlowRate} - {(t.Life + t.CreateTime) * t.SlowRate}");
         }
+
+        var cbag = new ConcurrentBag<string>() { "abc", "cde" };
+        Console.WriteLine(string.Join(",", cbag.ToArray()));
     }
 }
 public static class PQtest
@@ -122,6 +126,14 @@ public class PQ
     public bool Any()
     {
         return _pq.Count != 0;
+    }
+
+    public string[] ToArray()
+    {
+        var items = _pq.UnorderedItems;
+        var ans = new List<string>();
+        foreach (var i in items) ans.Add(i.Element);
+        return ans.ToArray();
     }
 }
 
