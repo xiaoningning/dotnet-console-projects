@@ -623,3 +623,53 @@
 2021-10-29 15:00:36.970 -07:00 [INF] finished items: 10
 2021-10-29 15:00:36.971 -07:00 [INF] done: 00:00:01.0794127
 2021-10-29 15:00:36.972 -07:00 [INF] register a new job handler: UnkownProcess
+2021-10-29 15:02:35.361 -07:00 [INF] Iconfiguration read in main: null
+2021-10-29 15:02:35.441 -07:00 [DBG] JobQueueTPL Logger OK!
+2021-10-29 15:02:35.442 -07:00 [DBG] Iconfiguration UsePriorityQueue: False
+2021-10-29 15:02:35.443 -07:00 [DBG] Iconfiguration DefaultQueueCapacity: 1
+2021-10-29 15:02:35.443 -07:00 [DBG] Iconfiguration SendAsyncTimeOutInMillisec: 1000
+2021-10-29 15:02:35.443 -07:00 [DBG] Iconfiguration RetryAsyncCnt: 1
+2021-10-29 15:02:35.450 -07:00 [DBG] JobQueueTPL create out queue
+2021-10-29 15:02:35.450 -07:00 [DBG] JobQueueTPL create fedex queue
+2021-10-29 15:02:35.452 -07:00 [DBG] JobQueueTPL create  ups queue
+2021-10-29 15:02:35.452 -07:00 [DBG] JobQueueTPL create unknown queue
+2021-10-29 15:02:35.452 -07:00 [DBG] JobQueueTPL set up finish job
+2021-10-29 15:02:35.454 -07:00 [DBG] JobQueueTPL link all blocks
+2021-10-29 15:02:35.489 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:35 PM : 849d - Fedex - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.489 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:35 PM : 056e - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.495 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:35.495 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:35.503 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:35 PM : 849d - Fedex - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.503 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:35 PM : 056e - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.505 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:35 PM : 7fd2 - Fedex - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.505 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:35.505 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:35 PM : e50e - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.505 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:35.506 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:35 PM : e50e - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.506 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:35 PM : 7fd2 - Fedex - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.507 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:35 PM : 1a3c - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:35.507 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:35.508 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:35 PM : 1a3c - UPS - 10/29/2021 3:02:35 PM
+2021-10-29 15:02:36.480 -07:00 [INF] No more jobs within set time
+2021-10-29 15:02:36.482 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:36 PM : 6da7 - Fedex - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.482 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:36.482 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:36 PM : dce0 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.482 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:36 PM : 6da7 - Fedex - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.483 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:36.483 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:36 PM : dce0 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.483 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:36 PM : 89c7 - Fedex - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.483 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:36.483 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:36 PM : 89c7 - Fedex - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.484 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:36 PM : 6f96 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.484 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:36.485 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:36 PM : 6f96 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.486 -07:00 [INF] JobQueueTPL.ProcessItemAsync: 10/29/2021 3:02:36 PM : 1e04 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.486 -07:00 [INF] Prioritize Item: 1
+2021-10-29 15:02:36.486 -07:00 [INF] JobQueueTPL.FinishItemAsync: 10/29/2021 3:02:36 PM : 1e04 - UPS - 10/29/2021 3:02:36 PM
+2021-10-29 15:02:36.528 -07:00 [INF] wait for more jobs System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at JobQueueTPL.FinishJob(CancellationToken ct) in /Users/ningwei/projects/dotnet-console-projects/dotnet-jobQueue-TPL-App1/JobQueueTPL.cs:line 214
+2021-10-29 15:02:36.528 -07:00 [INF] No more jobs within set time
+2021-10-29 15:02:36.529 -07:00 [INF] wasted items: 0
+2021-10-29 15:02:36.529 -07:00 [INF] finished items: 10
+2021-10-29 15:02:36.529 -07:00 [INF] done: 00:00:01.0723404
+2021-10-29 15:02:36.530 -07:00 [INF] register a new job handler: UnkownProcess
