@@ -147,6 +147,9 @@ public class JobQueueTPL : IJobQueue
     public async Task SendJob(IJobItem job, CancellationToken ct)
     {
         var item = (JobItem)job;
+        /**
+        /// use priority queue here, but queue needs to have buffer to prioritize items
+        /// use batch block as buffer region to pre-processed item
         if (_usePriorityQueue)
         {
             _priorityQueue.TryAdd(item);
@@ -157,6 +160,8 @@ public class JobQueueTPL : IJobQueue
             }
         }
         else await DispatchJob(item, ct);
+        */
+        await DispatchJob(item, ct);
     }
     public async Task DispatchJob(JobItem item, CancellationToken ct)
     {
