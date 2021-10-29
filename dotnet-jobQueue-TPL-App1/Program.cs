@@ -21,10 +21,34 @@ class JobQueueTPLApp1
         _logger.LogInformation("Iconfiguration read in main: {pv}", appconfig?["JobQueue:Capacity"]);
 
         var jq = builder.GetServices<JobQueueTPL>().First();
-        var wis = jq.GetWastedItems();
-        _logger.LogInformation($"wasted items: {wis.Count}");
 
-        await Task.Delay(1 * 1000);
+        var s = Stopwatch.StartNew();
+
+        Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
+        {
+            string jobType = i % 2 == 0 ? "Fedex" : "UPS";
+            var ti = new JobItem(jobType);
+            await jq.SendJob(ti, CancellationToken.None);
+        });
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(10 * 1000);
+        await jq.FinishJob(cts.Token);
+
+        Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
+                {
+                    string jobType = i % 2 == 0 ? "Fedex" : "UPS";
+                    var ti = new JobItem(jobType);
+                    await jq.SendJob(ti, CancellationToken.None);
+                });
+        await jq.FinishJob(cts.Token);
+        s.Stop();
+
+        var wis = jq.GetWastedItems();
+        var fis = jq.GetFinishedItems();
+        _logger.LogInformation($"wasted items: {wis.Count}");
+        _logger.LogInformation($"finished items: {fis.Count}");
+
+        _logger.LogInformation($"done: {s.Elapsed}");
         return Environment.ExitCode;
     }
     static ServiceProvider AppSetup(string[] args)

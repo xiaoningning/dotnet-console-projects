@@ -11,7 +11,7 @@ public class JobQueueTPL : IJobQueue
     readonly ILogger<JobQueueTPL> _logger;
     readonly IConfiguration _config;
     readonly bool _usePriorityQueue = false;
-    readonly int _defaultCapacity = 5;
+    readonly int _defaultCapacity = 1;
     readonly int _defaultRetryCnt = 3;
     BroadcastBlock<JobItem> _itemQueue;
     TransformBlock<JobItem, JobItem> _fedexQueue;
@@ -75,25 +75,38 @@ public class JobQueueTPL : IJobQueue
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} set up finish job");
 
         _finishQueue = new ActionBlock<JobItem>(_fAsync, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 });
-    }
-    public async Task SendJob(IJobItem j, CancellationToken ct)
-    {
-        var item = (JobItem)j;
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} link all blocks");
 
-        _itemQueue.LinkTo(_fedexQueue, item => item.ItemType == JobType.Fedex);
-        _itemQueue.LinkTo(_upsQueue, item => item.ItemType == JobType.UPS);
-        _itemQueue.LinkTo(_unknownQueue, item => item.ItemType == JobType.Unknown);
+        var linkOp = new DataflowLinkOptions() { PropagateCompletion = true };
+        _itemQueue.LinkTo(_fedexQueue, linkOp, item => item.ItemType == JobType.Fedex);
+        _itemQueue.LinkTo(_upsQueue, linkOp, item => item.ItemType == JobType.UPS);
+        _itemQueue.LinkTo(_unknownQueue, linkOp, item => item.ItemType == JobType.Unknown);
 
-        _fedexQueue.LinkTo(_finishQueue);
-        _upsQueue.LinkTo(_finishQueue);
-        _unknownQueue.LinkTo(_finishQueue);
+        _fedexQueue.LinkTo(_finishQueue, linkOp);
+        _upsQueue.LinkTo(_finishQueue, linkOp);
+        _unknownQueue.LinkTo(_finishQueue, linkOp);
+    }
+    public async Task SendJob(IJobItem job, CancellationToken ct)
+    {
+        var item = (JobItem)job;
 
         var executPolicy = Policy.Handle<Exception>().RetryAsync(_defaultRetryCnt);
         try
         {
-            await executPolicy.ExecuteAsync(async () => await _itemQueue.SendAsync(item, ct));
+            await executPolicy.ExecuteAsync(async () =>
+            {
+                // overflow the queue
+                // var isOverflow = await _itemQueue.SendAsync(item, ct);
+                var isOverflow = _itemQueue.Post(item);
+                /// BUG: buffer is unbounded
+                /// fedex/ups queue is bounded.
+                if (!isOverflow)
+                {
+                    _logger.LogError($"overflow to unknown queue {item.ToString()}");
+                    await _unknownQueue.SendAsync(item, ct);
+                }
+            });
         }
         catch (Exception ex)
         {
@@ -108,7 +121,23 @@ public class JobQueueTPL : IJobQueue
     }
     public async Task FinishJob(CancellationToken ct)
     {
-        await _finishQueue.Completion;
+        // it stops taking more jobs
+        // _itemQueue.Complete();
+        // it nevers set queue complete since it waits for more jobs!!!
+        // await _finishQueue.Completion;
+        try
+        {
+            // no more jobs coming in. finish the job
+            while (await _itemQueue.OutputAvailableAsync(ct)) if (ct.IsCancellationRequested) { return; }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation($"wait for more jobs {ex}");
+        }
+        finally
+        {
+            _logger.LogInformation("No more jobs within set time");
+        }
     }
 
     public ConcurrentBag<JobItem> GetWastedItems() => _wastedItem;
@@ -123,7 +152,9 @@ public class JobQueueTPL : IJobQueue
 
     async Task FinishItemAsync(JobItem item)
     {
-        await Task.Run(() => _finishedItem.Add(item));
+        // await Task.Run(() => _finishedItem.Add(item));
+        _finishedItem.Add(item);
+        await Task.Delay(1);
         _logger.LogInformation($"{typeof(JobQueueTPL).FullName}.{nameof(FinishItemAsync)}: {DateTime.Now} : {item.ToString()}");
     }
 }
