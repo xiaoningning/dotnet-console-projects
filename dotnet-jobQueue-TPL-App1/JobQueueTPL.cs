@@ -237,7 +237,7 @@ public class JobQueueTPL : IJobQueue
         var t = new ConcurrentBag<JobItem>();
         Parallel.ForEach(items, (i) =>
         {
-            _logger.LogInformation($"Prioritize Item: {i.GetJobPriority()}");
+            _logger.LogInformation($"Prioritize Item: {i.ToString()}");
             if (i.GetJobPriority() > _defaultJobPrioirty) t.Add(i);
         });
         return t.OrderBy(x => x.GetJobPriority());

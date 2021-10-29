@@ -14,7 +14,7 @@ public class JobItem : IJobItem
     public double GetJobPriority() => Math.Ceiling((DateTime.Now - CreateTime).TotalSeconds * LifeRate);
     public override string ToString()
     {
-        return $"{Id} - {ItemType} - {CreateTime}";
+        return $"{Id} - {ItemType} - {CreateTime} - {GetJobPriority()}";
     }
 }
 
