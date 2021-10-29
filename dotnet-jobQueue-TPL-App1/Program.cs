@@ -47,8 +47,8 @@ class JobQueueTPLApp1
         var fis = jq.GetFinishedItems();
         _logger.LogInformation($"wasted items: {wis.Count}");
         _logger.LogInformation($"finished items: {fis.Count}");
-
         _logger.LogInformation($"done: {s.Elapsed}");
+
         return Environment.ExitCode;
     }
     static ServiceProvider AppSetup(string[] args)
