@@ -21,6 +21,13 @@ class JobQueueBCApp1
         var jq = new JobQueueBlockingCollection(_loggerFactory, _config);
 
         var cts = new CancellationTokenSource();
+        Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
+        {
+            string jobType = i % 2 == 0 ? "Fedex" : "UPS";
+            var ti = new JobItem(jobType);
+            await jq.SendJob(ti, CancellationToken.None);
+        });
+
         cts.CancelAfter(5 * 1000);
         await jq.FinishJob(cts.Token);
 

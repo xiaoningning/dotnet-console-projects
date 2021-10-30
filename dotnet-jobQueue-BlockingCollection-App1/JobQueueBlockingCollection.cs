@@ -9,6 +9,7 @@ public class JobQueueBlockingCollection : IJobQueue
     int _defaultCapacity = 2;
     int _defaultRetryCnt = 1;
     BlockingCollection<JobItem> _fedexQueue;
+    BlockingCollection<JobItem> _upsQueue;
     BlockingCollection<JobItem> _unknownQueue;
     public JobQueueBlockingCollection(ILoggerFactory loggerFactory, IConfiguration config)
     {
@@ -32,10 +33,13 @@ public class JobQueueBlockingCollection : IJobQueue
         }
 
         _fedexQueue = new BlockingCollection<JobItem>(_defaultCapacity);
+        _upsQueue = new BlockingCollection<JobItem>(_defaultCapacity);
         _unknownQueue = new BlockingCollection<JobItem>(_defaultCapacity * 2);
     }
-    public async Task SendJob(IJobItem item, CancellationToken ct)
+    public async Task SendJob(IJobItem job, CancellationToken ct)
     {
+        var item = (JobItem)job;
+        _logger.LogInformation($"receive a new job: {item.ToString()}");
         await Task.Delay(1);
     }
     public async Task FinishJob(CancellationToken ct)
