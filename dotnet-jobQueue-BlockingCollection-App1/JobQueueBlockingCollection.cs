@@ -32,6 +32,7 @@ public class JobQueueBlockingCollection : IJobQueue
             _logger.LogDebug($"Iconfiguration defaultRetryCnt: {_defaultRetryCnt}");
         }
 
+        // create a blockingcollection with priorityqueue with IProducerConsumerCollection
         _fedexQueue = new BlockingCollection<JobItem>(_defaultCapacity);
         _upsQueue = new BlockingCollection<JobItem>(_defaultCapacity);
         _unknownQueue = new BlockingCollection<JobItem>(_defaultCapacity * 2);
@@ -47,3 +48,11 @@ public class JobQueueBlockingCollection : IJobQueue
         await Task.Delay(1);
     }
 }
+
+public class TC<T>
+{
+    public T Input { get; set; }
+    public TaskCompletionSource<T> TaskCompletionSource { get; set; }
+}
+
+public enum JobHandlerType { FedexProcess, UPSProcess, UnkownProcess, FinishProcess }
