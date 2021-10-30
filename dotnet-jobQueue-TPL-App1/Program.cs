@@ -35,11 +35,11 @@ class JobQueueTPLApp1
         await jq.FinishJob(cts.Token);
 
         Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
-                {
-                    string jobType = i % 2 == 0 ? "Fedex" : "UPS";
-                    var ti = new JobItem(jobType);
-                    await jq.SendJob(ti, CancellationToken.None);
-                });
+        {
+            string jobType = i % 2 == 0 ? "Fedex" : "UPS";
+            var ti = new JobItem(jobType);
+            await jq.SendJob(ti, CancellationToken.None);
+        });
         await jq.FinishJob(cts.Token);
         s.Stop();
 
