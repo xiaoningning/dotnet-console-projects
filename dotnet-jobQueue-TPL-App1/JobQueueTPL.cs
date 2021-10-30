@@ -193,7 +193,7 @@ public class JobQueueTPL : IJobQueue
         */
         await DispatchJob(item, ct);
     }
-    public async Task DispatchJob(JobItem item, CancellationToken ct)
+    async Task DispatchJob(JobItem item, CancellationToken ct)
     {
 
         var executPolicy = Policy.Handle<Exception>().RetryAsync(_defaultRetryCnt);
