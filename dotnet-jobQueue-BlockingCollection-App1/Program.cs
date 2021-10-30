@@ -31,6 +31,10 @@ class JobQueueBCApp1
         cts.CancelAfter(5 * 1000);
         await jq.FinishJob(cts.Token);
 
+        var wis = jq.GetWastedItems();
+        var fis = jq.GetFinishedItems();
+        _logger.LogInformation($"wasted items: {wis.Count}");
+        _logger.LogInformation($"finished items: {fis.Count}");
         s.Stop();
         _logger.LogInformation($"JobQueueBCApp1 done {s.Elapsed}");
         return Environment.ExitCode;

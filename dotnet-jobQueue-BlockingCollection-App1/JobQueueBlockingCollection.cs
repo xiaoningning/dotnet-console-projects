@@ -74,7 +74,7 @@ public class JobQueueBlockingCollection : IJobQueue
         {
             try
             {
-                foreach (var i in q.GetConsumingEnumerable(ct)) await FinishItemAsync(i);
+                foreach (var i in q.GetConsumingEnumerable(ct)) await ProcessItemAsync(i);
             }
             catch (OperationCanceledException ocEx)
             {
