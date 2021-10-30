@@ -9,8 +9,6 @@ using Serilog.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Text;
-
-
 public class SerilogConsoleApp
 {
 

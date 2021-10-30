@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks.Dataflow;
 using Polly;
 using System.Collections.Concurrent;
-using Microsoft.Extensions.DependencyInjection;
 
 /**
 learning notes:
@@ -233,10 +232,6 @@ public class JobQueueTPL : IJobQueue
             _logger.LogError($"poison queue handle backpressure {item.ToString()}");
             await _poisonQueue.SendAsync(item);
         }
-    }
-    public async Task DoJob(CancellationToken ct)
-    {
-        await Task.Delay(1);
     }
     public async Task FinishJob(CancellationToken ct)
     {
