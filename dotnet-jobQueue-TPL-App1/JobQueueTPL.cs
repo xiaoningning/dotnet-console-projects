@@ -17,23 +17,23 @@ Services:
 public class JobQueueTPL : IJobQueue
 {
     readonly ILogger<JobQueueTPL> _logger;
-    readonly IConfiguration _config;
-    readonly bool _usePriorityQueue = false;
-    readonly int _defaultCapacity = 2;
-    readonly int _defaultRetryCnt = 1;
-    readonly int _defaultJobQueueWaitInMillisec = (int)(1000 * 0.01);
-    readonly int _defaultBatchSize = 2;
-    readonly double _defaultJobPrioirty = 0.01;
+    IConfiguration _config;
+    bool _usePriorityQueue = false;
+    int _defaultCapacity = 2;
+    int _defaultRetryCnt = 1;
+    int _defaultJobQueueWaitInMillisec = (int)(1000 * 0.01);
+    int _defaultBatchSize = 2;
+    double _defaultJobPrioirty = 0.01;
     BufferBlock<JobItem> _poisonQueue;
     BufferBlock<JobItem> _fedexQueue;
     BufferBlock<JobItem> _upsQueue;
     BufferBlock<JobItem> _unknownQueue;
-    TransformManyBlock<JobItem[], JobItem> _fedexProcessor;
-    TransformManyBlock<JobItem[], JobItem> _upsProcessor;
-    TransformManyBlock<JobItem[], JobItem> _unknownProcessor;
     BatchBlock<JobItem> _fedexBatcher;
     BatchBlock<JobItem> _upsBatcher;
     BatchBlock<JobItem> _unknownBatcher;
+    TransformManyBlock<JobItem[], JobItem> _fedexProcessor;
+    TransformManyBlock<JobItem[], JobItem> _upsProcessor;
+    TransformManyBlock<JobItem[], JobItem> _unknownProcessor;
     TransformBlock<JobItem, JobItem> _finishQueue;
     ConcurrentBag<JobItem> _wastedItem;
     ConcurrentBag<JobItem> _finishedItem;
@@ -49,6 +49,27 @@ public class JobQueueTPL : IJobQueue
         _logger = logger ?? NullLogger<JobQueueTPL>.Instance;
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} Logger OK!");
 
+        InitQueues(config);
+    }
+
+    /**
+    /// DI does not work with two contructors somehow
+    public JobQueueTPL(ILoggerFactory lf, IConfiguration config)
+    {
+        if (lf == null)
+        {
+            Console.WriteLine("ILoggerFactory is null (Console), using NullLoggerFactory");
+        }
+
+        _logger = lf?.CreateLogger<JobQueueTPL>() ?? NullLoggerFactory.Instance.CreateLogger<JobQueueTPL>();
+        _logger.LogDebug($"{typeof(JobQueueTPL).FullName} ILoggerFactory OK!");
+
+        InitQueues(config);
+    }
+    */
+
+    void InitConfig(IConfiguration config)
+    {
         if (config != null)
         {
             _config = config;
@@ -61,7 +82,10 @@ public class JobQueueTPL : IJobQueue
             _defaultRetryCnt = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("RetryAsyncCnt").Value);
             _logger.LogDebug($"Iconfiguration RetryAsyncCnt: {_defaultRetryCnt}");
         }
-
+    }
+    void InitQueues(IConfiguration config)
+    {
+        InitConfig(config);
         _wastedItem = new ConcurrentBag<JobItem>();
         _finishedItem = new ConcurrentBag<JobItem>();
         _jobHandler = new Dictionary<JobHandlerType, Func<JobItem[], IEnumerable<JobItem>>>();
@@ -127,7 +151,6 @@ public class JobQueueTPL : IJobQueue
         _upsProcessor.LinkTo(_finishQueue, linkOp);
         _unknownProcessor.LinkTo(_finishQueue, linkOp);
     }
-
     public void RegisterJobHandler(JobHandlerType t, Func<JobItem[], IEnumerable<JobItem>> f)
     {
         _jobHandler[t] = f;

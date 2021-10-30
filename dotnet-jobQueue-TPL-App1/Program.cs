@@ -70,15 +70,27 @@ class JobQueueTPLApp1
             .WriteTo.File(_logFileName)
             .CreateLogger();
 
+        // setup serilog logger factory
+        // DI does not work with two constructors with Ilogger or IloggerFactory
+        /**
+                var serilogLoggerFactory = LoggerFactory.Create(builder =>
+                        builder
+                        .AddSerilog(logger: Log.Logger, dispose: true));
+
+        */
+
         // Setting up dependency injection
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(configBuilder);
+        // serviceCollection.AddSingleton(serilogLoggerFactory);
+
         serviceCollection.AddLogging(config =>
         {
             config
             .ClearProviders()
             .AddSerilog(logger: serilogLogger, dispose: true);
         });
+
         // Add service 
         serviceCollection.AddTransient<JobQueueTPL>();
 
