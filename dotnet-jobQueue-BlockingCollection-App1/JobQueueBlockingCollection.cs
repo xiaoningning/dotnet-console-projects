@@ -12,7 +12,7 @@ public class JobQueueBlockingCollection : IJobQueue
     int _defaultCapacity = 2;
     int _defaultRetryCnt = 1;
     int _degreeOfParallelism = 1;
-    int _defaultJobQueueWaitInMillisec = 2 * 1000;
+    int _defaultJobQueueWaitInMillisec = (int)(0.02 * 1000);
     BlockingCollection<JobItem> _fedexQueue;
     BlockingCollection<JobItem> _upsQueue;
     BlockingCollection<JobItem> _unknownQueue;
@@ -37,9 +37,11 @@ public class JobQueueBlockingCollection : IJobQueue
         {
             _config = config;
             _defaultCapacity = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultCapacity").Value);
-            _logger.LogDebug($"Iconfiguration defaultCapacity: {_defaultCapacity}");
+            _logger.LogInformation($"Iconfiguration defaultCapacity: {_defaultCapacity}");
             _defaultRetryCnt = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultRetryCnt").Value);
-            _logger.LogDebug($"Iconfiguration defaultRetryCnt: {_defaultRetryCnt}");
+            _logger.LogInformation($"Iconfiguration defaultRetryCnt: {_defaultRetryCnt}");
+            _defaultJobQueueWaitInMillisec = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultJobQueueWaitInMillisec").Value);
+            _logger.LogInformation($"Iconfiguration _defaultJobQueueWaitInMillisec: {_defaultJobQueueWaitInMillisec}");
         }
 
         // create a blockingcollection with priorityqueue with IProducerConsumerCollection
@@ -59,7 +61,6 @@ public class JobQueueBlockingCollection : IJobQueue
             [JobHandlerType.UPSProcess] = _upsQueue,
             [JobHandlerType.UnkownProcess] = _unknownQueue,
         };
-
     }
     public async Task SendJob(IJobItem job, CancellationToken ct)
     {
@@ -70,6 +71,10 @@ public class JobQueueBlockingCollection : IJobQueue
         {
             await Task.Run(() => DispatchJob(item));
         }
+        await ProcessJob(ct);
+    }
+    async Task ProcessJob(CancellationToken ct)
+    {
         await Parallel.ForEachAsync(_mapQueue.Values, async (q, ct) =>
         {
             try
@@ -78,15 +83,15 @@ public class JobQueueBlockingCollection : IJobQueue
             }
             catch (OperationCanceledException ocEx)
             {
-                _logger.LogDebug($"FinishItemAsync: {ocEx}");
+                _logger.LogDebug($"ProcessJob: {ocEx}");
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"FinishItemAsync unhandled exception: {ex}");
+                _logger.LogDebug($"ProcessJob unhandled exception: {ex}");
             }
             finally
             {
-                _logger.LogDebug($"FinishItemAsync {q.GetType().FullName}: {job}");
+                _logger.LogDebug($"ProcessJob {q.GetType().FullName}");
             }
         });
     }
@@ -113,6 +118,16 @@ public class JobQueueBlockingCollection : IJobQueue
     public void RegisterJobHandler(JobHandlerType t, Func<JobItem, JobItem> f)
     {
         throw new NotImplementedException();
+    }
+    public void StopJobHandler()
+    {
+        // _fedexQueue.GetConsumingEnumerable to stop blocking and exit when it's empty
+        // by calling completeAdding() := basically it stops the pipeline
+        _fedexQueue.CompleteAdding();
+        _upsQueue.CompleteAdding();
+        _unknownQueue.CompleteAdding();
+
+        _finishQueue.CompleteAdding();
     }
     public ConcurrentBag<JobItem> GetWastedItems() => _wastedItem;
     public ConcurrentBag<JobItem> GetFinishedItems() => _finishedItem;
