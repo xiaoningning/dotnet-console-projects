@@ -74,8 +74,16 @@ public class RateLimiter
         if (!_buckets.ContainsKey(apiId)) lock (_lock) _buckets[apiId] = new Queue<long>();
         int curCnt = 0;
         lock (_lock) curCnt = _buckets[apiId].Count;
-        if (curCnt == _capacity)
+        if (curCnt >= _capacity)
         {
+            while (curCnt > _capacity)
+            {
+                lock (_lock)
+                {
+                    _buckets[apiId].Dequeue();
+                    curCnt = _buckets[apiId].Count;
+                }
+            }
             bool ret = true;
             long t1 = Int64.MinValue;
             lock (_lock) t1 = _buckets[apiId].Peek();
@@ -117,9 +125,15 @@ public class RateLimiterConcurrent
         if (!buckets.ContainsKey(userId)) buckets.TryAdd(userId, new ConcurrentQueue<long>());
         ConcurrentQueue<long> times;
         buckets.TryGetValue(userId, out times);
-        if (times.Count == _capacity)
+        int curCnt = times.Count;
+        if (curCnt >= _capacity)
         {
             // BUG: first is not neccessary 1st time stamp
+            while (curCnt > _capacity)
+            {
+                times.TryDequeue(out _);
+                curCnt = times.Count;
+            }
             times.TryPeek(out long t1);
             if (time - t1 > _window)
             {
