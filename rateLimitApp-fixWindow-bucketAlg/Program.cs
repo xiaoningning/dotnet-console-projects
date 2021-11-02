@@ -128,7 +128,9 @@ public class RateLimiterConcurrent
         int curCnt = times.Count;
         if (curCnt >= _capacity)
         {
-            // BUG: first is not neccessary 1st time stamp
+            // BUG: first is not neccessary 1st time stamp 
+            // :=> queue should priority queue based on time
+            // dequeue the older time stamp
             while (curCnt > _capacity)
             {
                 times.TryDequeue(out _);
