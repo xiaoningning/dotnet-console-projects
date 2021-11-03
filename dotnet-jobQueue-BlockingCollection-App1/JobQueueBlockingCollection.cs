@@ -75,7 +75,12 @@ public class JobQueueBlockingCollection : IJobQueue
     }
     async Task ProcessJob(CancellationToken ct)
     {
-        await Parallel.ForEachAsync(_mapQueue.Values, async (q, ct) =>
+        CancellationTokenSource cts = new CancellationTokenSource();
+        ParallelOptions parallelOptions = new ParallelOptions();
+        parallelOptions.CancellationToken = cts.Token;
+        parallelOptions.MaxDegreeOfParallelism = _degreeOfParallelism;
+
+        await Parallel.ForEachAsync(_mapQueue.Values, parallelOptions, async (q, ct) =>
         {
             try
             {
