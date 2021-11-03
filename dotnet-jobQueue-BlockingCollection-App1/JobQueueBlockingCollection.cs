@@ -85,6 +85,7 @@ public class JobQueueBlockingCollection : IJobQueue
             try
             {
                 foreach (var i in q.GetConsumingEnumerable(ct)) await ProcessItemAsync(i);
+                parallelOptions.CancellationToken.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ocEx)
             {
