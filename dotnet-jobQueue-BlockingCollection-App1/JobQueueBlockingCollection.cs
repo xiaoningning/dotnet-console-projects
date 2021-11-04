@@ -84,8 +84,14 @@ public class JobQueueBlockingCollection : IJobQueue
         {
             try
             {
-                foreach (var i in q.GetConsumingEnumerable(ct)) await ProcessItemAsync(i);
-                parallelOptions.CancellationToken.ThrowIfCancellationRequested();
+                // it can batch process the returned IEnumerable<JobItem> for priority or something else
+                // use while loop wrap it up with cancellationtoken throw
+                while (true)
+                {
+                    var batchJobs = q.GetConsumingEnumerable(ct);
+                    foreach (var i in batchJobs) await ProcessItemAsync(i);
+                    parallelOptions.CancellationToken.ThrowIfCancellationRequested();
+                }
             }
             catch (OperationCanceledException ocEx)
             {
