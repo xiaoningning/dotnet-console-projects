@@ -75,37 +75,39 @@ public class JobQueueBlockingCollection : IJobQueue
     }
     public void ProcessJob(CancellationToken ct)
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
-        ParallelOptions parallelOptions = new ParallelOptions();
-        parallelOptions.CancellationToken = cts.Token;
-        parallelOptions.MaxDegreeOfParallelism = _degreeOfParallelism;
-
-        Parallel.ForEach(_mapQueue.Values, parallelOptions, async (q) =>
+        using (var childLinkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct))
         {
-            try
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.CancellationToken = childLinkedCts.Token;
+            parallelOptions.MaxDegreeOfParallelism = _degreeOfParallelism;
+
+            Parallel.ForEach(_mapQueue.Values, parallelOptions, async (q) =>
             {
-                // it can batch process the returned IEnumerable<JobItem> for priority or something else
-                // use while loop wrap it up with cancellationtoken throw
-                while (true)
+                try
                 {
-                    var batchJobs = q.GetConsumingEnumerable();
-                    foreach (var i in batchJobs) await ProcessItemAsync(i);
-                    parallelOptions.CancellationToken.ThrowIfCancellationRequested();
+                    // it can batch process the returned IEnumerable<JobItem> for priority or something else
+                    // use while loop wrap it up with cancellationtoken throw
+                    while (true)
+                    {
+                        var batchJobs = q.GetConsumingEnumerable();
+                        foreach (var i in batchJobs) await ProcessItemAsync(i);
+                        parallelOptions.CancellationToken.ThrowIfCancellationRequested();
+                    }
                 }
-            }
-            catch (OperationCanceledException ocEx)
-            {
-                _logger.LogDebug($"ProcessJob: {ocEx}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogDebug($"ProcessJob unhandled exception: {ex}");
-            }
-            finally
-            {
-                _logger.LogDebug($"ProcessJob {q.GetType().FullName}");
-            }
-        });
+                catch (OperationCanceledException ocEx)
+                {
+                    _logger.LogDebug($"ProcessJob: {ocEx}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDebug($"ProcessJob unhandled exception: {ex}");
+                }
+                finally
+                {
+                    _logger.LogDebug($"ProcessJob {q.GetType().FullName}");
+                }
+            });
+        }
     }
     public async Task FinishJob(CancellationToken ct)
     {

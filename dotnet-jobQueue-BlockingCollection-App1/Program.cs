@@ -36,8 +36,8 @@ class JobQueueBCApp1
 
         var wis = jq.GetWastedItems();
         var fis = jq.GetFinishedItems();
-        _logger.LogInformation($"wasted items: {wis.Count}");
-        _logger.LogInformation($"finished items: {fis.Count}");
+        _logger.LogInformation($"1st wasted items: {wis.Count}");
+        _logger.LogInformation($"1st finished items: {fis.Count}");
 
         cts.CancelAfter(5 * 1000);
         Parallel.ForEach(Enumerable.Range(1, 10), async (i) =>
