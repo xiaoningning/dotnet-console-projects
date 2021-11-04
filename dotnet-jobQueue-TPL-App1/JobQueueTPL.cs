@@ -289,8 +289,6 @@ public class JobQueueTPL : IJobQueue
 
     async Task<IEnumerable<JobItem>> ProcessItemAsync(JobItem[] items)
     {
-
-
         await Task.Delay(1);
         foreach (var i in items) _logger.LogInformation($"{typeof(JobQueueTPL).FullName}.{nameof(ProcessItemAsync)}: {DateTime.Now} : {i.ToString()}");
         return PrioritizeItem(items);
