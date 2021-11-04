@@ -21,14 +21,15 @@ class JobQueueBCApp1
         var jq = new JobQueueBlockingCollection(_loggerFactory, _config);
 
         var cts = new CancellationTokenSource();
+        cts.CancelAfter(5 * 1000);
         Parallel.ForEach(Enumerable.Range(1, 10), async (i) =>
         {
+            _logger.LogInformation($"!!!! {i} jobs");
             string jobType = i % 2 == 0 ? "Fedex" : "UPS";
             var ti = new JobItem(jobType);
-            await jq.SendJob(ti, CancellationToken.None);
+            await jq.SendJob(ti, cts.Token);
         });
-
-        cts.CancelAfter(5 * 1000);
+        cts.CancelAfter(10 * 1000);
         await jq.FinishJob(cts.Token);
 
         var wis = jq.GetWastedItems();
@@ -51,9 +52,9 @@ class JobQueueBCApp1
         {
             JobQueue = new
             {
-                DefaultCapacity = 2,
+                DefaultCapacity = 5,
                 DefaultRetryCnt = 1,
-                DefaultJobQueueWaitInMillisec = 2
+                DefaultJobQueueWaitInMillisec = 2 * 1000
             }
         });
 

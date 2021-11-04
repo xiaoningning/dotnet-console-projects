@@ -12,7 +12,7 @@ public class JobQueueBlockingCollection : IJobQueue
     int _defaultCapacity = 2;
     int _defaultRetryCnt = 1;
     int _degreeOfParallelism = 1;
-    int _defaultJobQueueWaitInMillisec = (int)(0.02 * 1000);
+    int _defaultJobQueueWaitInMillisec = (int)(5 * 1000);
     BlockingCollection<JobItem> _fedexQueue;
     BlockingCollection<JobItem> _upsQueue;
     BlockingCollection<JobItem> _unknownQueue;
@@ -69,9 +69,9 @@ public class JobQueueBlockingCollection : IJobQueue
         _logger.LogInformation($"receive a new job: {item.ToString()}");
         for (int i = 0; i < _degreeOfParallelism; i++)
         {
-            await Task.Run(() => DispatchJob(item));
+            await Task.Run(() => DispatchJob(item, ct));
+            await ProcessJob(ct);
         }
-        await ProcessJob(ct);
     }
     async Task ProcessJob(CancellationToken ct)
     {
@@ -115,7 +115,7 @@ public class JobQueueBlockingCollection : IJobQueue
             foreach (var i in _finishQueue.GetConsumingEnumerable(ct))
             {
                 if (ct.IsCancellationRequested) return;
-                else await FinishItemAsync(i);
+                await FinishItemAsync(i);
             }
         }
         catch (Exception ex)
@@ -143,36 +143,45 @@ public class JobQueueBlockingCollection : IJobQueue
     }
     public ConcurrentBag<JobItem> GetWastedItems() => _wastedItem;
     public ConcurrentBag<JobItem> GetFinishedItems() => _finishedItem;
-    void DispatchJob(JobItem item)
+    void DispatchJob(JobItem item, CancellationToken ct)
     {
         var executPolicy = Policy.Handle<Exception>().Retry(_defaultRetryCnt);
-        try
-        {
-            var jbCts = new CancellationTokenSource();
-            jbCts.CancelAfter(_defaultJobQueueWaitInMillisec);
-            var isSendJob = true;
-            executPolicy.Execute(() =>
-            {
-                //// overflow the queue
-                if (item.ItemType == JobType.Fedex) isSendJob = _fedexQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, jbCts.Token);
-                else if (item.ItemType == JobType.UPS) isSendJob = _upsQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, jbCts.Token);
-                else _unknownQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, jbCts.Token);
 
-                // fedex/ups queue is bounded.
-                if (!isSendJob)
-                {
-                    _logger.LogError($"overflow to unknown queue {item.ToString()}");
-                    _unknownQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, jbCts.Token);
-                }
-            });
-        }
-        catch (Exception ex)
+        using (var childLinkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct))
         {
-            _logger.LogError($"sendAsync {ex}");
-            _logger.LogError($"send to wasted bag {item.ToString()}");
-            _wastedItem.Add(item);
-            _logger.LogError($"poison queue handle backpressure {item.ToString()}");
-            _poisonQueue.TryAdd(item, _defaultCapacity);
+            try
+            {
+                childLinkedCts.CancelAfter(_defaultJobQueueWaitInMillisec);
+                var isSendJob = true;
+                executPolicy.Execute(() =>
+                {
+                    //// overflow the queue
+                    if (item.ItemType == JobType.Fedex) isSendJob = _fedexQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, childLinkedCts.Token);
+                    else if (item.ItemType == JobType.UPS) isSendJob = _upsQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, childLinkedCts.Token);
+                    else
+                    {
+                        _unknownQueue.TryAdd(item);
+                        ct.ThrowIfCancellationRequested();
+                    }
+
+                    // fedex/ups queue is bounded.
+                    if (!isSendJob)
+                    {
+                        _logger.LogError($"overflow to unknown queue {item.ToString()}");
+                        _unknownQueue.TryAdd(item);
+                        ct.ThrowIfCancellationRequested();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"sendAsync {ex}");
+                _logger.LogError($"send to wasted bag {item.ToString()}");
+                _wastedItem.Add(item);
+                _logger.LogError($"poison queue handle backpressure {item.ToString()}");
+                _poisonQueue.TryAdd(item, _defaultCapacity);
+            }
+
         }
     }
     async Task ProcessItemAsync(JobItem item)
