@@ -21,7 +21,7 @@ public class JobQueueTPL : IJobQueue
     int _defaultCapacity = 2;
     int _defaultRetryCnt = 1;
     int _defaultJobQueueWaitInMillisec = (int)(1000 * 0.01);
-    int _defaultBatchSize = 2;
+    int _defaultBatchSize = 3;
     double _defaultJobPrioirty = 0.01;
     BufferBlock<JobItem> _poisonQueue;
     BufferBlock<JobItem> _fedexQueue;
@@ -74,10 +74,10 @@ public class JobQueueTPL : IJobQueue
             _config = config;
             _usePriorityQueue = Convert.ToBoolean(_config.GetSection("JobQueue").GetSection("UsePriorityQueue").Value);
             _logger.LogDebug($"Iconfiguration UsePriorityQueue: {_usePriorityQueue}");
-            _defaultCapacity = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultQueueCapacity").Value);
+            _defaultCapacity = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultCapacity").Value);
             _logger.LogDebug($"Iconfiguration DefaultQueueCapacity: {_defaultCapacity}");
-            _defaultJobQueueWaitInMillisec = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("SendAsyncTimeOutInMillisec").Value);
-            _logger.LogDebug($"Iconfiguration SendAsyncTimeOutInMillisec: {_defaultJobQueueWaitInMillisec}");
+            _defaultJobQueueWaitInMillisec = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultJobQueueWaitInMillisec").Value);
+            _logger.LogDebug($"Iconfiguration DefaultJobQueueWaitInMillisec: {_defaultJobQueueWaitInMillisec}");
             _defaultRetryCnt = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("RetryAsyncCnt").Value);
             _logger.LogDebug($"Iconfiguration RetryAsyncCnt: {_defaultRetryCnt}");
         }
@@ -92,14 +92,28 @@ public class JobQueueTPL : IJobQueue
 
         Func<JobItem[], Task<IEnumerable<JobItem>>> _pAsync = async (i) => await ProcessItemAsync(i);
         Func<JobItem, Task<JobItem>> _fAsync = async (i) => await FinishItemAsync(i);
+        var dbo = new DataflowBlockOptions()
+        {
+            MaxMessagesPerTask = -1,
+            BoundedCapacity = _defaultCapacity
+        };
 
-        _fedexQueue = new BufferBlock<JobItem>();
-        _upsQueue = new BufferBlock<JobItem>();
-        _unknownQueue = new BufferBlock<JobItem>();
+        _fedexQueue = new BufferBlock<JobItem>(dbo);
+        _upsQueue = new BufferBlock<JobItem>(dbo);
+        _unknownQueue = new BufferBlock<JobItem>(dbo);
 
-        _fedexBatcher = new BatchBlock<JobItem>(_defaultBatchSize);
-        _upsBatcher = new BatchBlock<JobItem>(_defaultBatchSize);
-        _unknownBatcher = new BatchBlock<JobItem>(_defaultBatchSize);
+        // !!! batchblock process only on the _defaultBatchSize of input items each time
+        // if not enough of item from source block, it will wait!!!
+        // https://stackoverflow.com/questions/32717337/data-propagation-in-tpl-dataflow-pipeline-with-batchblock-triggerbatch
+        // https://stackoverflow.com/questions/35894878/batchblock-produces-batch-with-elements-sent-after-triggerbatch
+        // _fedexBatcher.TriggerBatch() to handle it or create a conditional batch block
+        var gbo = new GroupingDataflowBlockOptions()
+        {
+            Greedy = true
+        };
+        _fedexBatcher = new BatchBlock<JobItem>(_defaultBatchSize, gbo);
+        _upsBatcher = new BatchBlock<JobItem>(_defaultBatchSize, gbo);
+        _unknownBatcher = new BatchBlock<JobItem>(_defaultBatchSize, gbo);
 
         _logger.LogDebug($"{typeof(JobQueueTPL).FullName} create out queue");
         _poisonQueue = new BufferBlock<JobItem>(new DataflowBlockOptions()
@@ -141,7 +155,7 @@ public class JobQueueTPL : IJobQueue
         _upsQueue.LinkTo(_upsBatcher, linkOp);
         _unknownQueue.LinkTo(_unknownBatcher, linkOp);
 
-        // batch block to handle priority or remove poison item
+        // batch block to handle priority or remove poison items
         _fedexBatcher.LinkTo(_fedexProcessor, linkOp);
         _upsBatcher.LinkTo(_upsProcessor, linkOp);
         _unknownBatcher.LinkTo(_unknownProcessor, linkOp);
@@ -196,41 +210,52 @@ public class JobQueueTPL : IJobQueue
     async Task DispatchJob(JobItem item, CancellationToken ct)
     {
 
+        _logger.LogInformation($"Dispactch job {item}");
         var executPolicy = Policy.Handle<Exception>().RetryAsync(_defaultRetryCnt);
-        try
+
+        using (var jbCts = new CancellationTokenSource())
         {
-            var jbCts = new CancellationTokenSource();
-            jbCts.CancelAfter(_defaultJobQueueWaitInMillisec);
-            var isSendJob = true;
-            await executPolicy.ExecuteAsync(async () =>
+            try
             {
-                //// overflow the queue
-
-                // if sendasync, overflow is controlled by CancellationToken due to bounded capacity
-                // isSendJob = await _itemQueue.SendAsync(item, ct);
-
-                // if post, overflow is controlled by bounded capacity
-                // isSendJob = _itemQueue.Post(item);
-
-                if (item.ItemType == JobType.Fedex) isSendJob = await _fedexQueue.SendAsync(item, jbCts.Token);
-                else if (item.ItemType == JobType.UPS) isSendJob = await _upsQueue.SendAsync(item, jbCts.Token);
-                else await _unknownQueue.SendAsync(item, jbCts.Token);
-
-                // fedex/ups queue is bounded.
-                if (!isSendJob)
+                jbCts.CancelAfter(_defaultJobQueueWaitInMillisec / 1000);
+                var isSendJob = true;
+                var isToUnkown = true;
+                await executPolicy.ExecuteAsync(async () =>
                 {
-                    _logger.LogError($"overflow to unknown queue {item.ToString()}");
-                    await _unknownQueue.SendAsync(item, ct);
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"sendAsync {ex}");
-            _logger.LogError($"send to wasted bag {item.ToString()}");
-            await Task.Run(() => _wastedItem.Add(item));
-            _logger.LogError($"poison queue handle backpressure {item.ToString()}");
-            await _poisonQueue.SendAsync(item);
+                    //// overflow the queue
+
+                    // if sendasync, overflow is controlled by CancellationToken due to bounded capacity
+                    // it throws exception
+                    // isSendJob = await _itemQueue.SendAsync(item, ct);
+
+                    // if post, overflow is controlled by bounded capacity
+                    // return false
+                    // isSendJob = _itemQueue.Post(item);
+
+                    if (item.ItemType == JobType.Fedex) isSendJob = _fedexQueue.Post(item);
+                    else if (item.ItemType == JobType.UPS) isSendJob = _upsQueue.Post(item);
+                    else isToUnkown = _unknownQueue.Post(item);
+
+                    // fedex/ups queue is bounded.
+                    if (!isSendJob)
+                    {
+                        _logger.LogError($"overflow to unknown queue {item.ToString()}");
+                        isToUnkown = _unknownQueue.Post(item); ;
+                    }
+                    if (!isToUnkown)
+                    {
+                        _logger.LogError($"poison queue handle backpressure {item.ToString()}");
+                        await Task.Run(() => _wastedItem.Add(item));
+                        await _poisonQueue.SendAsync(item, jbCts.Token);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"sendAsync {ex}");
+                _logger.LogError($"send to wasted bag {item.ToString()}");
+                await Task.Run(() => _wastedItem.Add(item));
+            }
         }
     }
     public async Task FinishJob(CancellationToken ct)
@@ -241,6 +266,11 @@ public class JobQueueTPL : IJobQueue
         // await _finishQueue.Completion;
         try
         {
+            // hanlde the leftover item in source queue for batcher
+            if (_fedexQueue.Count < _defaultBatchSize) _fedexBatcher.TriggerBatch();
+            if (_upsQueue.Count < _defaultBatchSize) _upsBatcher.TriggerBatch();
+            if (_unknownQueue.Count < _defaultBatchSize) _unknownBatcher.TriggerBatch();
+
             // no more jobs coming in. finish the job
             while (await _finishQueue.OutputAvailableAsync(ct)) if (ct.IsCancellationRequested) { return; }
         }
@@ -259,6 +289,8 @@ public class JobQueueTPL : IJobQueue
 
     async Task<IEnumerable<JobItem>> ProcessItemAsync(JobItem[] items)
     {
+
+
         await Task.Delay(1);
         foreach (var i in items) _logger.LogInformation($"{typeof(JobQueueTPL).FullName}.{nameof(ProcessItemAsync)}: {DateTime.Now} : {i.ToString()}");
         return PrioritizeItem(items);

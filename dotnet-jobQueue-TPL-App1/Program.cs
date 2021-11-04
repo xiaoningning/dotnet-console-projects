@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -24,29 +26,38 @@ class JobQueueTPLApp1
 
         var s = Stopwatch.StartNew();
 
-        Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
+        Parallel.ForEach(Enumerable.Range(1, 20), async (i) =>
         {
             string jobType = i % 2 == 0 ? "Fedex" : "UPS";
             var ti = new JobItem(jobType);
+            await Task.Delay(1);
             await jq.SendJob(ti, CancellationToken.None);
         });
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1 * 1000);
+        cts.CancelAfter(5 * 1000);
         await jq.FinishJob(cts.Token);
 
-        Parallel.ForEach(Enumerable.Range(1, 5), async (i) =>
+        var wis = jq.GetWastedItems();
+        var fis = jq.GetFinishedItems();
+        _logger.LogInformation($"1st wasted items: {wis.Count}");
+        _logger.LogInformation($"1st finished items: {fis.Count}");
+
+        Parallel.ForEach(Enumerable.Range(1, 13), async (i) =>
         {
             string jobType = i % 2 == 0 ? "Fedex" : "UPS";
             var ti = new JobItem(jobType);
             await jq.SendJob(ti, CancellationToken.None);
         });
+        cts = new CancellationTokenSource();
+        cts.CancelAfter(10 * 1000);
         await jq.FinishJob(cts.Token);
         s.Stop();
 
-        var wis = jq.GetWastedItems();
-        var fis = jq.GetFinishedItems();
-        _logger.LogInformation($"wasted items: {wis.Count}");
-        _logger.LogInformation($"finished items: {fis.Count}");
+        wis = jq.GetWastedItems();
+        fis = jq.GetFinishedItems();
+        _logger.LogInformation($"2nd wasted items: {wis.Count}");
+        _logger.LogInformation($"2nd finished items: {fis.Count}");
+
         _logger.LogInformation($"done: {s.Elapsed}");
 
         Func<JobItem[], IEnumerable<JobItem>> f = (jobs) => { return jobs; };
@@ -56,11 +67,27 @@ class JobQueueTPLApp1
     }
     static ServiceProvider AppSetup(string[] args)
     {
+        /**
         IConfiguration configBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile(_appSettingFileName, true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
+                .Build();
+*/
+        var appsettingStr = JsonSerializer.Serialize(new
+        {
+            JobQueue = new
+            {
+                DefaultCapacity = 4,
+                DefaultRetryCnt = 1,
+                DefaultJobQueueWaitInMillisec = 2 * 1000,
+                UsePriorityQueue = false
+            }
+        });
+
+        IConfiguration configBuilder = new ConfigurationBuilder()
+                .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(appsettingStr)))
                 .Build();
 
         // setup serilog config
