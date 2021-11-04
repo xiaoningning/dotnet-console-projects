@@ -19,6 +19,8 @@ class JobQueueBCApp1
         AppSetup();
         var s = Stopwatch.StartNew();
         var jq = new JobQueueBlockingCollection(_loggerFactory, _config);
+        var tp = new Thread(() => jq.ProcessJob(CancellationToken.None)) { IsBackground = true };
+        tp.Start();
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(5 * 1000);
@@ -29,13 +31,29 @@ class JobQueueBCApp1
             var ti = new JobItem(jobType);
             await jq.SendJob(ti, cts.Token);
         });
-        cts.CancelAfter(10 * 1000);
+        cts.CancelAfter(1 * 1000);
         await jq.FinishJob(cts.Token);
 
         var wis = jq.GetWastedItems();
         var fis = jq.GetFinishedItems();
         _logger.LogInformation($"wasted items: {wis.Count}");
         _logger.LogInformation($"finished items: {fis.Count}");
+
+        cts.CancelAfter(5 * 1000);
+        Parallel.ForEach(Enumerable.Range(1, 10), async (i) =>
+        {
+            _logger.LogInformation($"!!!! {i} jobs");
+            string jobType = i % 2 == 0 ? "Fedex" : "UPS";
+            var ti = new JobItem(jobType);
+            await jq.SendJob(ti, cts.Token);
+        });
+        cts.CancelAfter(1 * 1000);
+        await jq.FinishJob(cts.Token);
+        wis = jq.GetWastedItems();
+        fis = jq.GetFinishedItems();
+        _logger.LogInformation($"2nd wasted items: {wis.Count}");
+        _logger.LogInformation($"2nd finished items: {fis.Count}");
+
         jq.StopJobHandler();
         s.Stop();
         _logger.LogInformation($"JobQueueBCApp1 done {s.Elapsed}");

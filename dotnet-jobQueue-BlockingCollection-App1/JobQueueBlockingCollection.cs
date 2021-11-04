@@ -70,17 +70,17 @@ public class JobQueueBlockingCollection : IJobQueue
         for (int i = 0; i < _degreeOfParallelism; i++)
         {
             await Task.Run(() => DispatchJob(item, ct));
-            await ProcessJob(ct);
+            // await ProcessJob(ct);
         }
     }
-    async Task ProcessJob(CancellationToken ct)
+    public void ProcessJob(CancellationToken ct)
     {
         CancellationTokenSource cts = new CancellationTokenSource();
         ParallelOptions parallelOptions = new ParallelOptions();
         parallelOptions.CancellationToken = cts.Token;
         parallelOptions.MaxDegreeOfParallelism = _degreeOfParallelism;
 
-        await Parallel.ForEachAsync(_mapQueue.Values, parallelOptions, async (q, ct) =>
+        Parallel.ForEach(_mapQueue.Values, parallelOptions, async (q) =>
         {
             try
             {
@@ -88,7 +88,7 @@ public class JobQueueBlockingCollection : IJobQueue
                 // use while loop wrap it up with cancellationtoken throw
                 while (true)
                 {
-                    var batchJobs = q.GetConsumingEnumerable(ct);
+                    var batchJobs = q.GetConsumingEnumerable();
                     foreach (var i in batchJobs) await ProcessItemAsync(i);
                     parallelOptions.CancellationToken.ThrowIfCancellationRequested();
                 }
@@ -153,6 +153,7 @@ public class JobQueueBlockingCollection : IJobQueue
             {
                 childLinkedCts.CancelAfter(_defaultJobQueueWaitInMillisec);
                 var isSendJob = true;
+                var isToUnkown = true;
                 executPolicy.Execute(() =>
                 {
                     //// overflow the queue
@@ -160,7 +161,7 @@ public class JobQueueBlockingCollection : IJobQueue
                     else if (item.ItemType == JobType.UPS) isSendJob = _upsQueue.TryAdd(item, _defaultJobQueueWaitInMillisec, childLinkedCts.Token);
                     else
                     {
-                        _unknownQueue.TryAdd(item);
+                        isToUnkown = _unknownQueue.TryAdd(item);
                         ct.ThrowIfCancellationRequested();
                     }
 
@@ -168,8 +169,14 @@ public class JobQueueBlockingCollection : IJobQueue
                     if (!isSendJob)
                     {
                         _logger.LogError($"overflow to unknown queue {item.ToString()}");
-                        _unknownQueue.TryAdd(item);
+                        isToUnkown = _unknownQueue.TryAdd(item);
                         ct.ThrowIfCancellationRequested();
+                    }
+
+                    if (!isToUnkown)
+                    {
+                        _logger.LogError($"poison queue handle backpressure {item.ToString()}");
+                        _poisonQueue.TryAdd(item, -1, ct);
                     }
                 });
             }
@@ -178,8 +185,6 @@ public class JobQueueBlockingCollection : IJobQueue
                 _logger.LogError($"sendAsync {ex}");
                 _logger.LogError($"send to wasted bag {item.ToString()}");
                 _wastedItem.Add(item);
-                _logger.LogError($"poison queue handle backpressure {item.ToString()}");
-                _poisonQueue.TryAdd(item, _defaultCapacity);
             }
 
         }
