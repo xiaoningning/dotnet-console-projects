@@ -81,7 +81,7 @@ public class JobQueueTPL : IJobQueue
             _defaultRetryCnt = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("RetryAsyncCnt").Value);
             _logger.LogDebug($"Iconfiguration RetryAsyncCnt: {_defaultRetryCnt}");
             _defaultBatchSize = Convert.ToInt32(_config.GetSection("JobQueue").GetSection("DefaultBatchSize").Value);
-            _logger.LogDebug($"Iconfiguration RetryAsyncCnt: {_defaultBatchSize}");
+            _logger.LogDebug($"Iconfiguration _defaultBatchSize: {_defaultBatchSize}");
         }
     }
     void InitQueues(IConfiguration config)
