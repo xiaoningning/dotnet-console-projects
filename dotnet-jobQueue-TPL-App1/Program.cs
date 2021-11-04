@@ -82,6 +82,7 @@ class JobQueueTPLApp1
                 DefaultCapacity = 4,
                 DefaultRetryCnt = 1,
                 DefaultJobQueueWaitInMillisec = 2 * 1000,
+                DefaultBatchSize = 3,
                 UsePriorityQueue = false
             }
         });
