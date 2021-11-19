@@ -165,7 +165,7 @@ public class BucketRateLimiter
     public BucketRateLimiter(int capacity, int refillTime = 10, int refillCnt = 5)
     {
         _maxCapacity = capacity;
-        _refillCntPerSec = refillTime;
+        _refillTimeInSec = refillTime;
         _refillCntPerSec = refillCnt;
     }
     void Reset()
