@@ -6,6 +6,21 @@ using System.Threading;
 using System.Diagnostics;
 using System.Linq;
 
+/**
+https://leetcode.com/discuss/interview-question/system-design/124558/Uber-or-Rate-Limiter
+questions:
+1. deny if they've made more than 100 requests in the past second 
+or if they have exceeded a rate of 100 requests per second?
+2. Two concepts of time here: the host and the requestor time stamp. 
+Do we deny if more than 100 requests in the past second for the host ?
+
+An optimized solution is to use a pooling technique. 
+For each clientID, has a pool of 100 elements. Instead of a queue, use a circular queue. T
+hat way you don't waste time creating and deleting objects. 
+When you add a new timestamp, just move the head pointer back one and modify. 
+When you want to check the timestamp, just check the one behind the head pointer.
+
+*/
 class RateLimitApp
 {
     static void Main()
@@ -154,15 +169,61 @@ public class RateLimiterConcurrent
     }
 }
 
+
+public class BucketRateLimiterCircularQueue
+{
+    public class Bucket
+    {
+        //store the actual epoch time for this bucket
+        //we only care about seconds granularity 
+        public double secondsEpoch = -1;
+        //a map of clientIds to the number of requests made for this second
+        public Dictionary<string, int> requestCounts = new Dictionary<string, int>();
+    }
+    private Bucket[] seconds;
+
+    private int _limitCnt;
+    private int _windowInSec;
+    private object _syncLock = new object();
+    public BucketRateLimiterCircularQueue(int requestLimitCnt)
+    {
+        _limitCnt = requestLimitCnt;
+        seconds = new Bucket[60];
+    }
+
+    public bool IsAllowed(string clientId)
+    {
+        // per second bucket if per minute, then totalminutes
+        var nowSecond = (DateTime.UtcNow - DateTimeOffset.UnixEpoch).TotalSeconds;
+        var nowBucket = seconds[(int)(nowSecond % 60)];
+        lock (_syncLock)
+        {
+            if (nowBucket.secondsEpoch != nowSecond)
+            {
+                nowBucket.secondsEpoch = nowSecond;
+                nowBucket.requestCounts.Clear();
+            }
+            if (!nowBucket.requestCounts.ContainsKey(clientId)) nowBucket.requestCounts[clientId] = 0;
+            int nowCnt = nowBucket.requestCounts[clientId];
+            if (nowCnt > _limitCnt) return false;
+            else
+            {
+                nowBucket.requestCounts[clientId]++;
+                return true;
+            }
+        }
+    }
+
+}
 // Not a thread safe
-public class BucketRateLimiter
+public class BucketRateLimiterBasedonRate
 {
     int _maxCapacity;
     int _refillTimeInSec;
     int _refillCntPerSec;
     int _curCnt;
     double _lastUpdateTime;
-    public BucketRateLimiter(int capacity, int refillTime = 10, int refillCnt = 5)
+    public BucketRateLimiterBasedonRate(int capacity, int refillTime = 60, int refillCnt = 5)
     {
         _maxCapacity = capacity;
         _refillTimeInSec = refillTime;
