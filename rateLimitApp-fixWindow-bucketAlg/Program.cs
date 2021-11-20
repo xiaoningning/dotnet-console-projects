@@ -48,7 +48,7 @@ public class RateLimitUT
         res.Add(rl1.CallApi("u1", 8));
         res.Add(rl1.CallApi("u1", 12));
         res.ForEach(x => Console.WriteLine($"{x}"));
-        var exp = new List<bool>() { true, true, false, false, true };
+        var exp = new List<bool>() { true, true, false, false, false };
         Debug.Assert(res.SequenceEqual(exp), "rate limit concurrent");
         Console.WriteLine("rate limiter done");
     }
@@ -91,9 +91,9 @@ public class RateLimiter
         lock (_lock)
         {
             while (_buckets[apiId].Count > _capacity) _buckets[apiId].Dequeue();
-            _buckets[apiId].Enqueue(time);
             if (_buckets[apiId].Count >= _capacity)
             {
+                _buckets[apiId].Enqueue(time);
                 if (time - _buckets[apiId].Peek() > _window)
                 {
                     _buckets[apiId].Dequeue();
@@ -101,7 +101,11 @@ public class RateLimiter
                 }
                 else return false;
             }
-            else return true;
+            else
+            {
+                _buckets[apiId].Enqueue(time);
+                return true;
+            }
         }
     }
 }
@@ -129,12 +133,12 @@ public class RateLimiterConcurrent
         // concurrent enqueue could be out of order!!!
         // always enqueue the new time since it is still counted as a request
         // it does not matter if return true or false
-        times.Enqueue(time);
         if (times.Count >= _capacity)
         {
             // BUG: first is not neccessary 1st time stamp 
             // :=> queue should priority queue based on time
             // dequeue the older time stamp
+            times.Enqueue(time);
             times.TryPeek(out long t1);
             if (time - t1 > _window)
             {
@@ -143,7 +147,11 @@ public class RateLimiterConcurrent
             }
             else return false;
         }
-        else return true;
+        else
+        {
+            times.Enqueue(time);
+            return true;
+        }
     }
 }
 
