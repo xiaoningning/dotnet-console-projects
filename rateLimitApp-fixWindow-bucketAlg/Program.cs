@@ -32,8 +32,8 @@ class RateLimitApp
         Console.WriteLine(Convert.ToInt64((t1 - epoch).TotalSeconds));
         Console.WriteLine(Convert.ToInt64((t2 - epoch).TotalSeconds));
         var ut = new RateLimitUT();
-        ut.RateLimitTest1();
         ut.RateLimitTest2();
+        ut.RateLimitTest1();
     }
 }
 public class RateLimitUT
@@ -87,36 +87,21 @@ public class RateLimiter
     public bool CallApi(string apiId, long time)
     {
         if (!_buckets.ContainsKey(apiId)) lock (_lock) _buckets[apiId] = new Queue<long>();
-        int curCnt = 0;
-        lock (_lock) curCnt = _buckets[apiId].Count;
-        if (curCnt >= _capacity)
+
+        lock (_lock)
         {
-            while (curCnt > _capacity)
+            while (_buckets[apiId].Count > _capacity) _buckets[apiId].Dequeue();
+            _buckets[apiId].Enqueue(time);
+            if (_buckets[apiId].Count >= _capacity)
             {
-                lock (_lock)
+                if (time - _buckets[apiId].Peek() > _window)
                 {
                     _buckets[apiId].Dequeue();
-                    curCnt = _buckets[apiId].Count;
+                    return true;
                 }
+                else return false;
             }
-            bool ret = true;
-            long t1 = Int64.MinValue;
-            lock (_lock) t1 = _buckets[apiId].Peek();
-            if (time - t1 > _window)
-            {
-                lock (_lock)
-                {
-                    _buckets[apiId].Dequeue();
-                    _buckets[apiId].Enqueue(time);
-                }
-            }
-            else ret = false;
-            return ret;
-        }
-        else
-        {
-            lock (_lock) _buckets[apiId].Enqueue(time);
-            return true;
+            else return true;
         }
     }
 }
@@ -130,7 +115,7 @@ public class RateLimiterConcurrent
     public RateLimiterConcurrent(int cnt, int windowInSec)
     {
         // semaphore controls # of threads to access the resource
-        _semaphoreSlim = new SemaphoreSlim(0, 5);
+        _semaphoreSlim = new SemaphoreSlim(0, 5); // put it to the caller
         _capacity = cnt;
         _window = windowInSec;
         buckets = new ConcurrentDictionary<string, ConcurrentQueue<long>>();
@@ -140,35 +125,27 @@ public class RateLimiterConcurrent
         if (!buckets.ContainsKey(userId)) buckets.TryAdd(userId, new ConcurrentQueue<long>());
         ConcurrentQueue<long> times;
         buckets.TryGetValue(userId, out times);
-        int curCnt = times.Count;
-        if (curCnt >= _capacity)
+        while (times.Count > _capacity) times.TryDequeue(out _);
+        // concurrent enqueue could be out of order!!!
+        // always enqueue the new time since it is still counted as a request
+        // it does not matter if return true or false
+        times.Enqueue(time);
+        if (times.Count >= _capacity)
         {
             // BUG: first is not neccessary 1st time stamp 
             // :=> queue should priority queue based on time
             // dequeue the older time stamp
-            while (curCnt > _capacity)
-            {
-                times.TryDequeue(out _);
-                curCnt = times.Count;
-            }
             times.TryPeek(out long t1);
             if (time - t1 > _window)
             {
                 times.TryDequeue(out _);
-                times.Enqueue(time);
                 return true;
             }
             else return false;
         }
-        else
-        {
-            // concurrent enqueue could be out of order!!!
-            times.Enqueue(time);
-            return true;
-        }
+        else return true;
     }
 }
-
 
 public class BucketRateLimiterCircularQueue
 {
