@@ -15,12 +15,12 @@
         var r3 = iep.PermutateStringArray(new string[] { "a", "b", "c" });
         foreach (var r in r3) Console.WriteLine(string.Join(",", r));
 
-        var r4 = iep.PermutateIntList(new int[] { 1, 2, 3 });
+        var r4 = iep.PermutateIntArray(new int[] { 1, 2, 3 });
         foreach (var r in r4) Console.WriteLine(string.Join(",", r));
 
         Console.WriteLine("uenumerable permutation old framework");
         var permOld = new IEnumerablePermutationNetFramework();
-        var ro4 = permOld.PermutateIntList(new int[] { 1, 2, 3 });
+        var ro4 = permOld.PermutateIntArray(new int[] { 1, 2, 3 });
         foreach (var r in ro4) Console.WriteLine(string.Join(",", r));
     }
 }
@@ -56,7 +56,7 @@ public class IEnumerablePermutation
             );
     }
 
-    public IEnumerable<int[]> PermutateIntList(int[] source)
+    public IEnumerable<int[]> PermutateIntArray(int[] source)
     {
         return permutate(source, Enumerable.Empty<int>());
 
@@ -94,7 +94,7 @@ public class IEnumerablePermutationNetFramework
         return Permutation(source, Enumerable.Empty<string>());
     }
 
-    public IEnumerable<int[]> PermutateIntList(int[] source)
+    public IEnumerable<int[]> PermutateIntArray(int[] source)
     {
         return Permutation(source, Enumerable.Empty<int>());
     }
